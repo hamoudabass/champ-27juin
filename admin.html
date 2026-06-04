@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <title>Administration Championnat</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #0a1628;
+        color: white;
+        margin: 0;
+        padding: 20px;
+      }
+
+      h1 {
+        color: #009edb;
+      }
+
+      .card {
+        background: #162a4a;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        background: #1a3358;
+        border: none;
+        color: white;
+        border-radius: 6px;
+      }
+
+      button {
+        background: #009edb;
+        border: none;
+        padding: 10px 15px;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      td,
+      th {
+        padding: 10px;
+        border-bottom: 1px solid #243c66;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Administration Championnat Alisabieh</h1>
+
+    <div class="card">
+      <h2>Gestion des matchs</h2>
+
+      <select id="matchSelect"></select>
+
+      <input type="number" id="scoreHome" placeholder="Score domicile" />
+      <input type="number" id="scoreAway" placeholder="Score extérieur" />
+
+      <select id="status">
+        <option value="upcoming">À venir</option>
+        <option value="live">En cours</option>
+        <option value="half">Mi-temps</option>
+        <option value="done">Terminé</option>
+      </select>
+
+      <button onclick="saveMatch()">Enregistrer</button>
+    </div>
+
+    <div class="card">
+      <h2>Ajouter un événement</h2>
+
+      <select id="eventMatch"></select>
+
+      <select id="eventType">
+        <option value="goal">But</option>
+        <option value="yellow">Carton Jaune</option>
+        <option value="red">Carton Rouge</option>
+        <option value="penalty">Penalty</option>
+      </select>
+
+      <input id="eventMinute" placeholder="Minute" />
+
+      <input id="eventPlayer" placeholder="Nom du joueur" />
+
+      <button onclick="addEvent()">Ajouter</button>
+    </div>
+
+    <div class="card">
+      <h2>Nouveau Match</h2>
+
+      <input id="newDay" type="date" />
+
+      <select id="homeTeam"></select>
+
+      <select id="awayTeam"></select>
+
+      <input id="newTime" type="time" />
+
+      <input id="field" placeholder="Terrain" />
+
+      <button onclick="createMatch()">Créer Match</button>
+    </div>
+
+    <button id="logoutBtn">Déconnexion</button>
+
+    <script type="module">
+      import { signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+      import {
+        getAuth,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+
+      import {
+        getFirestore,
+        collection,
+        getDocs,
+        doc,
+        updateDoc,
+        addDoc,
+        arrayUnion,
+      } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCnpck3ez1b1oD9A9-cfMKMPm1I1WONXYY",
+        authDomain: "championnat-alisabieh-2026.firebaseapp.com",
+        projectId: "championnat-alisabieh-2026",
+        storageBucket: "championnat-alisabieh-2026.firebasestorage.app",
+        messagingSenderId: "971207034843",
+        appId: "1:971207034843:web:dac112b526239ff75fc9fe",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      const auth = getAuth(app);
+
+      onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          window.location = "login.html";
+        }
+      });
+
+      let matches = [];
+      let teams = [];
+
+      async function loadTeams() {
+        const snap = await getDocs(collection(db, "teams"));
+
+        snap.forEach((d) => {
+          teams.push({
+            id: d.id,
+            ...d.data(),
+          });
+        });
+
+        const home = document.getElementById("homeTeam");
+        const away = document.getElementById("awayTeam");
+
+        teams.forEach((team) => {
+          home.innerHTML += `
+<option value="${team.id}">
+${team.name}
+</option>`;
+
+          away.innerHTML += `
+<option value="${team.id}">
+${team.name}
+</option>`;
+        });
+      }
+
+      async function loadMatches() {
+        const snap = await getDocs(collection(db, "matches"));
+
+        const matchSelect = document.getElementById("matchSelect");
+
+        const eventMatch = document.getElementById("eventMatch");
+
+        snap.forEach((d) => {
+          matches.push({
+            id: d.id,
+            ...d.data(),
+          });
+
+          matchSelect.innerHTML += `
+<option value="${d.id}">
+${d.data().homeId}
+ vs
+${d.data().awayId}
+</option>`;
+
+          eventMatch.innerHTML += `
+<option value="${d.id}">
+${d.data().homeId}
+ vs
+${d.data().awayId}
+</option>`;
+        });
+      }
+
+      window.saveMatch = async () => {
+        const id = document.getElementById("matchSelect").value;
+
+        await updateDoc(doc(db, "matches", id), {
+          scoreHome: Number(document.getElementById("scoreHome").value),
+
+          scoreAway: Number(document.getElementById("scoreAway").value),
+
+          status: document.getElementById("status").value,
+        });
+
+        alert("Match mis à jour");
+      };
+
+      window.addEvent = async () => {
+        const matchId = document.getElementById("eventMatch").value;
+
+        await updateDoc(doc(db, "matches", matchId), {
+          events: arrayUnion({
+            type: document.getElementById("eventType").value,
+
+            minute: Number(document.getElementById("eventMinute").value),
+
+            playerName: document.getElementById("eventPlayer").value,
+          }),
+        });
+
+        alert("Événement ajouté");
+      };
+
+      window.createMatch = async () => {
+        await addDoc(collection(db, "matches"), {
+          day: document.getElementById("newDay").value,
+
+          homeId: document.getElementById("homeTeam").value,
+
+          awayId: document.getElementById("awayTeam").value,
+
+          time: document.getElementById("newTime").value,
+
+          field: document.getElementById("field").value,
+
+          status: "upcoming",
+
+          scoreHome: null,
+          scoreAway: null,
+
+          events: [],
+        });
+
+        alert("Match créé");
+      };
+
+      loadTeams();
+      loadMatches();
+
+      document
+        .getElementById("logoutBtn")
+        .addEventListener("click", async () => {
+          await signOut(auth);
+
+          window.location = "login.html";
+        });
+    </script>
+  </body>
+</html>
