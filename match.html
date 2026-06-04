@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Détail Match — Championnat Alisabieh 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+
+:root {
+  --dj-blue:   #009EDB;
+  --dj-green:  #007A3D;
+  --dj-red:    #CE1126;
+  --dj-white:  #FFFFFF;
+  --dj-sand:   #C8A96E;
+  --dj-night:  #0A1628;
+  --dj-dark:   #0F1F3D;
+  --dj-mid:    #1A3358;
+  --dj-card:   #162A4A;
+  --text-dim:  #8BA3C0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Barlow', sans-serif;
+  background: var(--dj-night);
+  color: var(--dj-white);
+  min-height: 100vh;
+}
+
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,158,219,0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(0,122,61,0.07) 0%, transparent 60%);
+  pointer-events:none; z-index:0;
+}
+
+/* HEADER */
+header {
+  position:relative; z-index:10;
+  background:var(--dj-dark);
+  border-bottom:2px solid var(--dj-blue);
+}
+
+.header-flag-bar {
+  height:5px;
+  background:linear-gradient(90deg, var(--dj-blue) 50%, var(--dj-green) 50%);
+}
+
+.header-inner {
+  max-width:1100px; margin:0 auto;
+  padding:14px 20px;
+  display:flex; align-items:center; gap:16px;
+}
+
+.back-btn {
+  background:transparent;
+  border:1.5px solid rgba(0,158,219,0.4);
+  color:var(--dj-blue);
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px; font-weight:600;
+  letter-spacing:1px; text-transform:uppercase;
+  padding:8px 16px; border-radius:4px;
+  cursor:pointer; transition:all 0.2s;
+  text-decoration:none; display:inline-flex; align-items:center; gap:6px;
+}
+.back-btn:hover { background:var(--dj-blue); color:#fff; }
+
+.header-title {
+  font-family:'Oswald',sans-serif;
+  font-size:16px; font-weight:600;
+  letter-spacing:2px; text-transform:uppercase;
+  color:var(--dj-sand);
+}
+
+/* CONTENU */
+.main-content {
+  position:relative; z-index:1;
+  max-width:1100px; margin:0 auto;
+  padding:28px 20px 60px;
+}
+
+/* SECTION HEADER */
+.section-header {
+  display:flex; align-items:center; gap:14px;
+  margin-bottom:18px; margin-top:32px;
+}
+
+.section-header:first-child { margin-top:0; }
+
+.section-line { flex:1; height:1px; background:linear-gradient(90deg, rgba(0,158,219,0.4), transparent); }
+
+.section-header h2 {
+  font-family:'Oswald',sans-serif;
+  font-size:13px; font-weight:600;
+  letter-spacing:3px; text-transform:uppercase;
+  color:var(--dj-blue); white-space:nowrap;
+}
+
+/* CLASSEMENT */
+.standings-table {
+  width:100%; border-collapse:collapse;
+  background:var(--dj-card);
+  border-radius:8px; overflow:hidden;
+  border:1px solid rgba(0,158,219,0.15);
+}
+
+.standings-table thead th {
+  background:var(--dj-dark);
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px; font-weight:700;
+  letter-spacing:1.5px; text-transform:uppercase;
+  color:var(--text-dim);
+  padding:10px 14px; text-align:center;
+}
+
+.standings-table thead th:first-child,
+.standings-table thead th:nth-child(2) { text-align:left; }
+
+.standings-table tbody tr {
+  border-top:1px solid rgba(0,158,219,0.08);
+  transition:background 0.15s;
+}
+
+.standings-table tbody tr:hover { background:rgba(0,158,219,0.07); }
+
+.standings-table td {
+  padding:12px 14px;
+  font-size:14px; text-align:center;
+}
+
+.standings-table td:first-child { text-align:left; }
+.standings-table td:nth-child(2) { text-align:left; }
+
+.rank-num {
+  font-family:'Oswald',sans-serif;
+  font-size:16px; font-weight:700;
+  color:var(--text-dim);
+}
+
+.rank-num.rank-1 { color:var(--dj-sand); }
+.rank-num.rank-2 { color:#B0C4DE; }
+.rank-num.rank-3 { color:#CD7F32; }
+
+.team-badge-sm {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:26px; height:26px; border-radius:50%;
+  font-family:'Oswald',sans-serif; font-size:9px; font-weight:700;
+  margin-right:8px; vertical-align:middle;
+  flex-shrink:0;
+  border:1.5px solid rgba(255,255,255,0.1);
+}
+
+.pts-cell {
+  font-family:'Oswald',sans-serif;
+  font-size:18px; font-weight:700;
+  color:var(--dj-blue);
+}
+
+.diff-pos { color:#2ECC71; }
+.diff-neg { color:var(--dj-red); }
+.diff-zero { color:var(--text-dim); }
+
+/* TOPS (buteurs / cartons) */
+.tops-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:14px;
+}
+
+@media (max-width:700px) { .tops-grid { grid-template-columns:1fr; } }
+
+.top-card {
+  background:var(--dj-card);
+  border:1px solid rgba(0,158,219,0.15);
+  border-radius:8px; overflow:hidden;
+}
+
+.top-card-header {
+  background:var(--dj-dark);
+  padding:10px 14px;
+  display:flex; align-items:center; gap:8px;
+}
+
+.top-card-icon {
+  width:24px; height:24px; border-radius:4px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px;
+}
+
+.top-card-header h3 {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px; font-weight:700;
+  letter-spacing:2px; text-transform:uppercase;
+  color:var(--text-dim);
+}
+
+.top-row {
+  display:flex; align-items:center;
+  padding:10px 14px; gap:10px;
+  border-top:1px solid rgba(0,158,219,0.06);
+}
+
+.top-rank {
+  font-family:'Oswald',sans-serif; font-size:12px;
+  color:var(--text-dim); width:16px; text-align:center;
+}
+
+.top-player-name {
+  flex:1; font-size:13px; font-weight:500;
+}
+
+.top-team-badge {
+  width:22px; height:22px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Oswald',sans-serif; font-size:8px; font-weight:700;
+  flex-shrink:0;
+}
+
+.top-value {
+  font-family:'Oswald',sans-serif; font-size:16px; font-weight:700;
+  min-width:28px; text-align:right;
+}
+
+.card-yellow { color:#FFD700; }
+.card-red    { color:var(--dj-red); }
+
+/* SCORE DU MATCH */
+.match-score-hero {
+  background:var(--dj-card);
+  border:1px solid rgba(0,158,219,0.2);
+  border-radius:10px; overflow:hidden;
+}
+
+.match-hero-top {
+  background:var(--dj-dark);
+  padding:10px 20px;
+  display:flex; justify-content:space-between; align-items:center;
+}
+
+.match-hero-top .field-label {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px; letter-spacing:1px; text-transform:uppercase;
+  color:var(--text-dim);
+}
+
+.match-hero-body {
+  padding:28px 20px;
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center; gap:16px;
+}
+
+.hero-team {
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+  text-align:center;
+}
+
+.hero-team-badge {
+  width:64px; height:64px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Oswald',sans-serif; font-size:18px; font-weight:700;
+  border:3px solid rgba(255,255,255,0.1);
+}
+
+.hero-team-name {
+  font-family:'Oswald',sans-serif; font-size:18px; font-weight:600;
+  letter-spacing:1px;
+}
+
+.hero-team-coach {
+  font-size:11px; color:var(--text-dim);
+  font-family:'Barlow Condensed',sans-serif;
+  letter-spacing:0.5px;
+}
+
+.hero-score-center { text-align:center; }
+
+.hero-score-nums {
+  font-family:'Oswald',sans-serif; font-size:56px; font-weight:700;
+  letter-spacing:4px; line-height:1;
+  display:flex; align-items:center; gap:10px;
+}
+
+.hero-score-sep { color:var(--text-dim); font-size:36px; }
+
+.hero-time-info {
+  margin-top:8px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px; letter-spacing:1px; text-transform:uppercase;
+  color:var(--text-dim);
+}
+
+/* ÉVÉNEMENTS DU MATCH */
+.events-list {
+  padding:14px 20px;
+  border-top:1px solid rgba(0,158,219,0.1);
+  display:flex; flex-direction:column; gap:6px;
+}
+
+.event-row {
+  display:flex; align-items:center; gap:10px;
+  font-size:13px; padding:4px 0;
+}
+
+.event-min {
+  font-family:'Oswald',sans-serif; font-size:12px;
+  color:var(--text-dim); min-width:36px; text-align:right;
+}
+
+.event-icon { width:18px; text-align:center; }
+.event-label { flex:1; }
+.event-team {
+  font-family:'Barlow Condensed',sans-serif; font-size:11px;
+  color:var(--text-dim); letter-spacing:0.5px;
+}
+
+/* COMPOSITIONS */
+.lineup-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:16px;
+}
+
+@media (max-width:700px) { .lineup-grid { grid-template-columns:1fr; } }
+
+.lineup-card {
+  background:var(--dj-card);
+  border:1px solid rgba(0,158,219,0.15);
+  border-radius:8px; overflow:hidden;
+}
+
+.lineup-card-header {
+  padding:14px 16px;
+  display:flex; align-items:center; gap:12px;
+  border-bottom:1px solid rgba(0,158,219,0.1);
+}
+
+.lineup-badge {
+  width:42px; height:42px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Oswald',sans-serif; font-size:12px; font-weight:700;
+  border:2px solid rgba(255,255,255,0.1);
+}
+
+.lineup-team-name {
+  font-family:'Oswald',sans-serif; font-size:17px; font-weight:600;
+}
+
+.lineup-coach-label {
+  font-size:11px; color:var(--text-dim);
+  font-family:'Barlow Condensed',sans-serif; letter-spacing:0.5px;
+  margin-top:2px;
+}
+
+.pos-group { margin:0; }
+
+.pos-group-label {
+  padding:6px 16px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px; font-weight:700;
+  letter-spacing:2px; text-transform:uppercase;
+  color:var(--text-dim);
+  background:rgba(0,0,0,0.15);
+  border-top:1px solid rgba(0,158,219,0.06);
+}
+
+.player-row {
+  display:flex; align-items:center; gap:10px;
+  padding:9px 16px;
+  border-top:1px solid rgba(0,158,219,0.04);
+  transition:background 0.15s;
+}
+
+.player-row:hover { background:rgba(0,158,219,0.05); }
+
+.player-num {
+  font-family:'Oswald',sans-serif; font-size:14px; font-weight:600;
+  color:var(--text-dim); min-width:22px;
+}
+
+.player-name { flex:1; font-size:14px; font-weight:400; }
+
+.pos-pill {
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:10px; font-weight:700; letter-spacing:1px;
+  padding:2px 7px; border-radius:3px;
+}
+
+.pos-GK  { background:rgba(0,158,219,0.2);  color:var(--dj-blue);  }
+.pos-DEF { background:rgba(0,122,61,0.2);   color:#4CAF50;         }
+.pos-MIL { background:rgba(200,169,110,0.2);color:var(--dj-sand);  }
+.pos-ATT { background:rgba(206,17,38,0.2);  color:#FF6B7A;         }
+
+/* FOOTER */
+footer {
+  position:relative; z-index:1;
+  background:var(--dj-dark);
+  border-top:1px solid rgba(0,158,219,0.2);
+  padding:16px 20px; text-align:center;
+}
+.footer-flag { height:3px; background:linear-gradient(90deg, var(--dj-blue) 50%, var(--dj-green) 50%); margin-bottom:14px; }
+footer p { font-size:11px; color:var(--text-dim); font-family:'Barlow Condensed',sans-serif; letter-spacing:1px; text-transform:uppercase; }
+
+@keyframes pulse {
+  0%,100%{ opacity:1; transform:scale(1); }
+  50%    { opacity:0.4; transform:scale(0.8); }
+}
+
+.badge-live { background:rgba(206,17,38,0.2); color:#FF4D6A; border:1px solid rgba(206,17,38,0.4); }
+.badge-half { background:rgba(200,169,110,0.2); color:var(--dj-sand); border:1px solid rgba(200,169,110,0.4); }
+.badge-done { background:rgba(58,80,112,0.4); color:var(--text-dim); border:1px solid rgba(58,80,112,0.6); }
+.badge-upcoming { background:rgba(0,122,61,0.15); color:#2ECC71; border:1px solid rgba(0,122,61,0.4); }
+
+.status-badge {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:4px 10px; border-radius:3px;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase;
+}
+
+.dot { width:6px; height:6px; background:var(--dj-red); border-radius:50%; animation:pulse 1.2s infinite; }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-flag-bar"></div>
+  <div class="header-inner">
+    <a class="back-btn" href="index.html">← Retour</a>
+    <span class="header-title">Championnat Alisabieh 2026 — Détail du Match</span>
+  </div>
+</header>
+
+<main class="main-content" id="app">
+  <p style="color:var(--text-dim); font-size:14px; text-align:center; padding:40px;">Chargement…</p>
+</main>
+
+<footer>
+  <div class="footer-flag"></div>
+  <p>Championnat Alisabieh 2026 &nbsp;·&nbsp; République de Djibouti</p>
+</footer>
+
+<script>
+/* ==================================================================
+   DONNÉES IDENTIQUES À index.html — GARDEZ LES DEUX FICHIERS SYNCHRO
+   ================================================================== */
+
+const teams = [
+  {
+    id:"ali", name:"AS Alisabieh", short:"ALI",
+    color:"#009EDB", textColor:"#fff",
+    coach:"Mohamed Hassan Warsama",
+    players:[
+      {num:1, name:"Omar Abdillahi Robleh",    pos:"GK" },
+      {num:2, name:"Hassan Elmi Gouled",        pos:"DEF"},
+      {num:3, name:"Youssouf Ali Mahamoud",     pos:"DEF"},
+      {num:4, name:"Abdi Farah Ibrahim",         pos:"DEF"},
+      {num:5, name:"Ismail Omar Hassan",         pos:"DEF"},
+      {num:6, name:"Ahmed Djibril Said",         pos:"MIL"},
+      {num:7, name:"Moussa Guirreh Ali",         pos:"MIL"},
+      {num:8, name:"Kadar Hassan Farah",         pos:"MIL"},
+      {num:9, name:"Idriss Bouh Ibrahim",        pos:"ATT"},
+      {num:10,name:"Abdirahman Youssouf Dirie",  pos:"ATT"},
+      {num:11,name:"Djama Elmi Warsama",         pos:"ATT"},
+      {num:12,name:"Said Ahmed Osman",           pos:"GK" },
+      {num:13,name:"Ibrahim Mahamoud Hassan",    pos:"DEF"},
+      {num:14,name:"Houssein Ali Gouled",        pos:"MIL"},
+    ]
+  },
+  {
+    id:"dag", name:"FC Dagueyto", short:"DAG",
+    color:"#007A3D", textColor:"#fff",
+    coach:"Abdirahman Bouh Said",
+    players:[
+      {num:1, name:"Farah Osman Elmi",           pos:"GK" },
+      {num:2, name:"Ahmed Ibrahim Warsama",       pos:"DEF"},
+      {num:3, name:"Moussa Djama Hassan",         pos:"DEF"},
+      {num:4, name:"Omar Said Guirreh",           pos:"DEF"},
+      {num:5, name:"Ali Hassan Mahamoud",         pos:"DEF"},
+      {num:6, name:"Ismail Farah Dirie",          pos:"MIL"},
+      {num:7, name:"Hassan Abdi Ibrahim",         pos:"MIL"},
+      {num:8, name:"Djibril Omar Warsama",        pos:"MIL"},
+      {num:9, name:"Kadar Ali Hassan",            pos:"ATT"},
+      {num:10,name:"Abdirahman Said Ahmed",       pos:"ATT"},
+      {num:11,name:"Houssein Elmi Bouh",          pos:"ATT"},
+      {num:12,name:"Youssouf Hassan Omar",        pos:"GK" },
+      {num:13,name:"Ibrahim Djama Farah",         pos:"DEF"},
+      {num:14,name:"Said Idriss Mahamoud",        pos:"MIL"},
+    ]
+  },
+  {
+    id:"gal", name:"Étoile de Gallafi", short:"GAL",
+    color:"#CE1126", textColor:"#fff",
+    coach:"Ibrahim Guirreh Warsama",
+    players:[
+      {num:1, name:"Omar Djibril Farah",          pos:"GK" },
+      {num:2, name:"Hassan Said Elmi",            pos:"DEF"},
+      {num:3, name:"Abdi Moussa Mahamoud",        pos:"DEF"},
+      {num:4, name:"Youssouf Ibrahim Dirie",      pos:"DEF"},
+      {num:5, name:"Ahmed Omar Hassan",           pos:"DEF"},
+      {num:6, name:"Ismail Abdirahman Bouh",      pos:"MIL"},
+      {num:7, name:"Djama Houssein Ali",          pos:"MIL"},
+      {num:8, name:"Kadar Farah Warsama",         pos:"MIL"},
+      {num:9, name:"Idriss Ahmed Said",           pos:"ATT"},
+      {num:10,name:"Said Ali Elmi",               pos:"ATT"},
+      {num:11,name:"Moussa Ibrahim Omar",         pos:"ATT"},
+      {num:12,name:"Farah Hassan Djama",          pos:"GK" },
+      {num:13,name:"Ali Youssouf Guirreh",        pos:"DEF"},
+      {num:14,name:"Hassan Mahamoud Idriss",      pos:"MIL"},
+    ]
+  },
+  {
+    id:"hol", name:"Holhol United", short:"HOL",
+    color:"#C8A96E", textColor:"#0A1628",
+    coach:"Said Warsama Hassan",
+    players:[
+      {num:1, name:"Farah Ahmed Guirreh",         pos:"GK" },
+      {num:2, name:"Omar Hassan Elmi",            pos:"DEF"},
+      {num:3, name:"Abdirahman Djibril Said",     pos:"DEF"},
+      {num:4, name:"Hassan Idriss Mahamoud",      pos:"DEF"},
+      {num:5, name:"Moussa Ali Ibrahim",          pos:"DEF"},
+      {num:6, name:"Ismail Omar Dirie",           pos:"MIL"},
+      {num:7, name:"Ahmed Farah Bouh",            pos:"MIL"},
+      {num:8, name:"Youssouf Djama Hassan",       pos:"MIL"},
+      {num:9, name:"Kadar Said Elmi",             pos:"ATT"},
+      {num:10,name:"Idriss Moussa Warsama",       pos:"ATT"},
+      {num:11,name:"Said Hassan Omar",            pos:"ATT"},
+      {num:12,name:"Ali Abdi Ibrahim",            pos:"GK" },
+      {num:13,name:"Djibril Houssein Ahmed",      pos:"DEF"},
+      {num:14,name:"Ibrahim Omar Guirreh",        pos:"MIL"},
+    ]
+  },
+];
+
+const matches = [
+  {id:"m1",  day:"2026-06-24", time:"08:30", homeId:"ali", awayId:"dag", status:"done",     scoreHome:3, scoreAway:1, field:"Terrain Principal",
+   events:[{type:"goal",minute:12,teamId:"ali",playerName:"Idriss Bouh Ibrahim"},{type:"yellow",minute:23,teamId:"dag",playerName:"Hassan Abdi Ibrahim"},{type:"goal",minute:35,teamId:"ali",playerName:"Abdirahman Youssouf Dirie"},{type:"goal",minute:51,teamId:"dag",playerName:"Kadar Ali Hassan"},{type:"red",minute:67,teamId:"dag",playerName:"Omar Said Guirreh"},{type:"goal",minute:78,teamId:"ali",playerName:"Djama Elmi Warsama"},{type:"penalty",minute:82,teamId:"ali",playerName:"Abdirahman Youssouf Dirie",scored:false}]},
+  {id:"m2",  day:"2026-06-24", time:"10:30", homeId:"gal", awayId:"hol", status:"done",     scoreHome:2, scoreAway:2, field:"Terrain Principal",
+   events:[{type:"goal",minute:8,teamId:"gal",playerName:"Idriss Ahmed Said"},{type:"goal",minute:29,teamId:"hol",playerName:"Kadar Said Elmi"},{type:"yellow",minute:38,teamId:"gal",playerName:"Djama Houssein Ali"},{type:"goal",minute:44,teamId:"hol",playerName:"Idriss Moussa Warsama"},{type:"yellow",minute:55,teamId:"hol",playerName:"Ahmed Farah Bouh"},{type:"goal",minute:71,teamId:"gal",playerName:"Said Ali Elmi"},{type:"penalty",minute:85,teamId:"gal",playerName:"Said Ali Elmi",scored:true}]},
+  {id:"m3",  day:"2026-06-24", time:"14:00", homeId:"ali", awayId:"gal", status:"done",     scoreHome:1, scoreAway:0, field:"Terrain Annexe",
+   events:[{type:"yellow",minute:15,teamId:"gal",playerName:"Kadar Farah Warsama"},{type:"goal",minute:33,teamId:"ali",playerName:"Djama Elmi Warsama"},{type:"yellow",minute:60,teamId:"ali",playerName:"Moussa Guirreh Ali"},{type:"yellow",minute:72,teamId:"gal",playerName:"Ahmed Omar Hassan"}]},
+  {id:"m4",  day:"2026-06-24", time:"16:30", homeId:"dag", awayId:"hol", status:"done",     scoreHome:0, scoreAway:2, field:"Terrain Annexe",
+   events:[{type:"goal",minute:18,teamId:"hol",playerName:"Said Hassan Omar"},{type:"yellow",minute:32,teamId:"dag",playerName:"Djibril Omar Warsama"},{type:"goal",minute:64,teamId:"hol",playerName:"Kadar Said Elmi"},{type:"red",minute:80,teamId:"dag",playerName:"Said Idriss Mahamoud"}]},
+  {id:"m5",  day:"2026-06-25", time:"08:30", homeId:"hol", awayId:"ali", status:"done",     scoreHome:1, scoreAway:3, field:"Terrain Principal",
+   events:[{type:"goal",minute:5,teamId:"ali",playerName:"Abdirahman Youssouf Dirie"},{type:"goal",minute:20,teamId:"hol",playerName:"Idriss Moussa Warsama"},{type:"yellow",minute:37,teamId:"hol",playerName:"Moussa Ali Ibrahim"},{type:"goal",minute:50,teamId:"ali",playerName:"Idriss Bouh Ibrahim"},{type:"goal",minute:73,teamId:"ali",playerName:"Djama Elmi Warsama"}]},
+  {id:"m6",  day:"2026-06-25", time:"10:30", homeId:"dag", awayId:"gal", status:"done",     scoreHome:2, scoreAway:1, field:"Terrain Principal",
+   events:[{type:"goal",minute:14,teamId:"dag",playerName:"Abdirahman Said Ahmed"},{type:"goal",minute:28,teamId:"gal",playerName:"Moussa Ibrahim Omar"},{type:"yellow",minute:44,teamId:"gal",playerName:"Ismail Abdirahman Bouh"},{type:"goal",minute:67,teamId:"dag",playerName:"Kadar Ali Hassan"},{type:"penalty",minute:75,teamId:"dag",playerName:"Kadar Ali Hassan",scored:false}]},
+  {id:"m7",  day:"2026-06-26", time:"09:00", homeId:"ali", awayId:"hol", status:"done",     scoreHome:4, scoreAway:0, field:"Terrain Principal",
+   events:[{type:"goal",minute:10,teamId:"ali",playerName:"Idriss Bouh Ibrahim"},{type:"goal",minute:22,teamId:"ali",playerName:"Abdirahman Youssouf Dirie"},{type:"red",minute:30,teamId:"hol",playerName:"Omar Hassan Elmi"},{type:"goal",minute:41,teamId:"ali",playerName:"Djama Elmi Warsama"},{type:"yellow",minute:55,teamId:"ali",playerName:"Ahmed Djibril Said"},{type:"penalty",minute:60,teamId:"ali",playerName:"Abdirahman Youssouf Dirie",scored:true},{type:"goal",minute:60,teamId:"ali",playerName:"Abdirahman Youssouf Dirie"}]},
+  {id:"m8",  day:"2026-06-26", time:"11:00", homeId:"gal", awayId:"dag", status:"half",    scoreHome:1, scoreAway:1, field:"Terrain Annexe",
+   events:[{type:"goal",minute:17,teamId:"gal",playerName:"Said Ali Elmi"},{type:"yellow",minute:25,teamId:"dag",playerName:"Hassan Abdi Ibrahim"},{type:"goal",minute:38,teamId:"dag",playerName:"Abdirahman Said Ahmed"},{type:"yellow",minute:45,teamId:"gal",playerName:"Moussa Ibrahim Omar"}]},
+  {id:"m9",  day:"2026-06-26", time:"15:00", homeId:"dag", awayId:"ali", status:"live",    scoreHome:0, scoreAway:1, field:"Terrain Principal",
+   events:[{type:"goal",minute:23,teamId:"ali",playerName:"Idriss Bouh Ibrahim"},{type:"yellow",minute:38,teamId:"dag",playerName:"Moussa Djama Hassan"}]},
+  {id:"m10", day:"2026-06-26", time:"17:30", homeId:"hol", awayId:"gal", status:"upcoming",scoreHome:null,scoreAway:null, field:"Terrain Principal", events:[]},
+  {id:"m11", day:"2026-06-27", time:"09:00", homeId:"hol", awayId:"dag", status:"upcoming",scoreHome:null,scoreAway:null, field:"Terrain Annexe", events:[]},
+  {id:"m12", day:"2026-06-27", time:"11:00", homeId:"gal", awayId:"ali", status:"upcoming",scoreHome:null,scoreAway:null, field:"Terrain Annexe", events:[]},
+  {id:"m13", day:"2026-06-27", time:"15:00", homeId:"dag", awayId:"hol", status:"upcoming",scoreHome:null,scoreAway:null, field:"Terrain Principal — Petite Finale", events:[]},
+  {id:"m14", day:"2026-06-27", time:"17:30", homeId:"ali", awayId:"gal", status:"upcoming",scoreHome:null,scoreAway:null, field:"Terrain Principal — ⭐ GRANDE FINALE", events:[]},
+];
+
+/* ======================== HELPERS ======================== */
+const teamById = {};
+teams.forEach(t => { teamById[t.id] = t; });
+
+function computeStandings() {
+  const pts = {};
+  teams.forEach(t => { pts[t.id] = {id:t.id,p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0}; });
+  matches.filter(m => m.status==="done").forEach(m => {
+    const h=pts[m.homeId], a=pts[m.awayId];
+    h.p++; a.p++; h.gf+=m.scoreHome; h.ga+=m.scoreAway; a.gf+=m.scoreAway; a.ga+=m.scoreHome;
+    if (m.scoreHome>m.scoreAway)      { h.w++; h.pts+=3; a.l++; }
+    else if (m.scoreHome<m.scoreAway) { a.w++; a.pts+=3; h.l++; }
+    else                              { h.d++; a.d++; h.pts++; a.pts++; }
+  });
+  return Object.values(pts).sort((a,b)=>(b.pts-a.pts)||((b.gf-b.ga)-(a.gf-a.ga)));
+}
+
+function computeTopScorers() {
+  const map={};
+  matches.forEach(m => m.events.filter(e=>e.type==="goal").forEach(e => {
+    const k=e.playerName+"|"+e.teamId;
+    if (!map[k]) map[k]={name:e.playerName,teamId:e.teamId,goals:0};
+    map[k].goals++;
+  }));
+  return Object.values(map).sort((a,b)=>b.goals-a.goals).slice(0,5);
+}
+
+function computeTopCards(type) {
+  const map={};
+  matches.forEach(m => m.events.filter(e=>e.type===type).forEach(e => {
+    const k=e.playerName+"|"+e.teamId;
+    if (!map[k]) map[k]={name:e.playerName,teamId:e.teamId,count:0};
+    map[k].count++;
+  }));
+  return Object.values(map).sort((a,b)=>b.count-a.count).slice(0,5);
+}
+
+function computeTopPenalties() {
+  const map={};
+  matches.forEach(m => m.events.filter(e=>e.type==="penalty").forEach(e => {
+    const k=e.playerName+"|"+e.teamId;
+    if (!map[k]) map[k]={name:e.playerName,teamId:e.teamId,count:0};
+    map[k].count++;
+  }));
+  return Object.values(map).sort((a,b)=>b.count-a.count).slice(0,5);
+}
+
+function statusBadge(status) {
+  const cfg={
+    live:    {cls:"badge-live",    label:'<span class="dot"></span> En cours'},
+    half:    {cls:"badge-half",    label:"Mi-temps"},
+    done:    {cls:"badge-done",    label:"Terminé"},
+    upcoming:{cls:"badge-upcoming",label:"À venir"},
+  };
+  const c=cfg[status]||cfg.upcoming;
+  return `<span class="status-badge ${c.cls}">${c.label}</span>`;
+}
+
+function eventIcon(type, scored) {
+  if (type==="goal")    return "⚽";
+  if (type==="yellow")  return "🟨";
+  if (type==="red")     return "🟥";
+  if (type==="penalty") return scored ? "⚽ (pen.)" : "❌ (pen.)";
+  return "•";
+}
+
+/* ======================== RENDER ======================== */
+function render(matchId) {
+  const m = matches.find(x => x.id === matchId);
+  if (!m) { document.getElementById("app").innerHTML = `<p style="color:var(--dj-red);padding:40px;text-align:center">Match introuvable.</p>`; return; }
+
+  const home = teamById[m.homeId];
+  const away = teamById[m.awayId];
+  const standings = computeStandings();
+  const scorers = computeTopScorers();
+  const yellows = computeTopCards("yellow");
+  const reds    = computeTopCards("red");
+  const pens    = computeTopPenalties();
+
+  /* — CLASSEMENT — */
+  const standHtml = `
+    <table class="standings-table">
+      <thead>
+        <tr>
+          <th>#</th><th>Équipe</th><th>J</th><th>V</th><th>N</th><th>D</th>
+          <th>BP</th><th>BC</th><th>Diff</th><th>Pts</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${standings.map((s,i) => {
+          const t = teamById[s.id];
+          const diff = s.gf - s.ga;
+          const diffClass = diff>0?"diff-pos":diff<0?"diff-neg":"diff-zero";
+          const isMatch = (s.id===m.homeId||s.id===m.awayId);
+          return `
+          <tr style="${isMatch?'background:rgba(0,158,219,0.07);border-left:2px solid var(--dj-blue);':''}">
+            <td><span class="rank-num rank-${i+1}">${i+1}</span></td>
+            <td>
+              <span class="team-badge-sm" style="background:${t.color};color:${t.textColor}">${t.short}</span>
+              ${t.name}
+            </td>
+            <td>${s.p}</td><td>${s.w}</td><td>${s.d}</td><td>${s.l}</td>
+            <td>${s.gf}</td><td>${s.ga}</td>
+            <td class="${diffClass}">${diff>0?"+":""}${diff}</td>
+            <td class="pts-cell">${s.pts}</td>
+          </tr>`;
+        }).join("")}
+      </tbody>
+    </table>`;
+
+  /* — TOP BUTEURS — */
+  const scorersHtml = scorers.length===0
+    ? `<div class="top-row"><span style="color:var(--text-dim);font-size:13px">Aucun but marqué</span></div>`
+    : scorers.map((p,i) => {
+        const t=teamById[p.teamId];
+        return `<div class="top-row">
+          <span class="top-rank">${i+1}</span>
+          <div class="top-team-badge" style="background:${t.color};color:${t.textColor};font-size:8px">${t.short}</div>
+          <span class="top-player-name">${p.name}</span>
+          <span class="top-value" style="color:var(--dj-blue)">${p.goals} ⚽</span>
+        </div>`;
+      }).join("");
+
+  /* — TOP JAUNES — */
+  const yellowsHtml = yellows.length===0
+    ? `<div class="top-row"><span style="color:var(--text-dim);font-size:13px">Aucun carton</span></div>`
+    : yellows.map((p,i) => {
+        const t=teamById[p.teamId];
+        return `<div class="top-row">
+          <span class="top-rank">${i+1}</span>
+          <div class="top-team-badge" style="background:${t.color};color:${t.textColor};font-size:8px">${t.short}</div>
+          <span class="top-player-name">${p.name}</span>
+          <span class="top-value card-yellow">${p.count} 🟨</span>
+        </div>`;
+      }).join("");
+
+  /* — TOP ROUGES — */
+  const redsHtml = reds.length===0
+    ? `<div class="top-row"><span style="color:var(--text-dim);font-size:13px">Aucun carton rouge</span></div>`
+    : reds.map((p,i) => {
+        const t=teamById[p.teamId];
+        return `<div class="top-row">
+          <span class="top-rank">${i+1}</span>
+          <div class="top-team-badge" style="background:${t.color};color:${t.textColor};font-size:8px">${t.short}</div>
+          <span class="top-player-name">${p.name}</span>
+          <span class="top-value card-red">${p.count} 🟥</span>
+        </div>`;
+      }).join("");
+
+  /* — PÉNALITÉS — */
+  const pensHtml = pens.length===0
+    ? `<div class="top-row"><span style="color:var(--text-dim);font-size:13px">Aucune pénalité</span></div>`
+    : pens.map((p,i) => {
+        const t=teamById[p.teamId];
+        return `<div class="top-row">
+          <span class="top-rank">${i+1}</span>
+          <div class="top-team-badge" style="background:${t.color};color:${t.textColor};font-size:8px">${t.short}</div>
+          <span class="top-player-name">${p.name}</span>
+          <span class="top-value" style="color:#FF9F43">${p.count} pen.</span>
+        </div>`;
+      }).join("");
+
+  /* — SCORE DU MATCH — */
+  const scoreHtml = m.scoreHome!==null
+    ? `<div class="hero-score-nums">
+        <span style="color:${home.color}">${m.scoreHome}</span>
+        <span class="hero-score-sep">—</span>
+        <span style="color:${away.color}">${m.scoreAway}</span>
+       </div>`
+    : `<div style="font-family:'Oswald',sans-serif;font-size:36px;color:var(--text-dim);letter-spacing:4px">VS</div>`;
+
+  const eventsHtml = m.events.length===0
+    ? `<p style="color:var(--text-dim);font-size:13px;padding:12px 0">Aucun événement enregistré.</p>`
+    : m.events.sort((a,b)=>a.minute-b.minute).map(e => {
+        const t=teamById[e.teamId];
+        const isHome = e.teamId===m.homeId;
+        return `<div class="event-row" style="${isHome?'':'flex-direction:row-reverse;text-align:right'}">
+          <span class="event-min">${e.minute}'</span>
+          <span class="event-icon">${eventIcon(e.type, e.scored)}</span>
+          <span class="event-label">${e.playerName}</span>
+          <span class="event-team">${t.short}</span>
+        </div>`;
+      }).join("");
+
+  /* — COMPOSITIONS — */
+  function lineupCard(team) {
+    const posOrder = ["GK","DEF","MIL","ATT"];
+    const posLabel = {GK:"Gardien",DEF:"Défenseurs",MIL:"Milieux",ATT:"Attaquants"};
+    const grouped = {};
+    posOrder.forEach(p => { grouped[p]=[]; });
+    team.players.forEach(p => { if(grouped[p.pos]) grouped[p.pos].push(p); });
+
+    const rows = posOrder.map(pos => {
+      const pl = grouped[pos];
+      if (!pl.length) return "";
+      return `<div class="pos-group">
+        <div class="pos-group-label">${posLabel[pos]}</div>
+        ${pl.map(p => `
+          <div class="player-row">
+            <span class="player-num">${p.num}</span>
+            <span class="player-name">${p.name}</span>
+            <span class="pos-pill pos-${p.pos}">${p.pos}</span>
+          </div>`).join("")}
+      </div>`;
+    }).join("");
+
+    return `<div class="lineup-card">
+      <div class="lineup-card-header">
+        <div class="lineup-badge" style="background:${team.color};color:${team.textColor}">${team.short}</div>
+        <div>
+          <div class="lineup-team-name">${team.name}</div>
+          <div class="lineup-coach-label">Coach : ${team.coach}</div>
+        </div>
+      </div>
+      ${rows}
+    </div>`;
+  }
+
+  /* ===== ASSEMBLAGE FINAL ===== */
+  document.getElementById("app").innerHTML = `
+
+    <!-- 1. CLASSEMENT -->
+    <div class="section-header">
+      <div class="section-line"></div>
+      <h2>Classement général</h2>
+      <div class="section-line" style="transform:scaleX(-1)"></div>
+    </div>
+    ${standHtml}
+
+    <!-- 2. TOPS -->
+    <div class="section-header" style="margin-top:32px">
+      <div class="section-line"></div>
+      <h2>Statistiques du championnat</h2>
+      <div class="section-line" style="transform:scaleX(-1)"></div>
+    </div>
+    <div class="tops-grid">
+      <div class="top-card">
+        <div class="top-card-header">
+          <div class="top-card-icon" style="background:rgba(0,158,219,0.15)">⚽</div>
+          <h3>Top Buteurs</h3>
+        </div>
+        ${scorersHtml}
+      </div>
+      <div class="top-card">
+        <div class="top-card-header">
+          <div class="top-card-icon" style="background:rgba(255,215,0,0.15)">🟨</div>
+          <h3>Top Cartons Jaunes</h3>
+        </div>
+        ${yellowsHtml}
+      </div>
+      <div class="top-card">
+        <div class="top-card-header">
+          <div class="top-card-icon" style="background:rgba(206,17,38,0.15)">🟥</div>
+          <h3>Top Cartons Rouges</h3>
+        </div>
+        ${redsHtml}
+      </div>
+    </div>
+    <div class="tops-grid" style="margin-top:14px;grid-template-columns:1fr 1fr">
+      <div class="top-card">
+        <div class="top-card-header">
+          <div class="top-card-icon" style="background:rgba(255,159,67,0.15)">⚡</div>
+          <h3>Top Pénalités</h3>
+        </div>
+        ${pensHtml}
+      </div>
+    </div>
+
+    <!-- 3. SCORE DU MATCH -->
+    <div class="section-header" style="margin-top:32px">
+      <div class="section-line"></div>
+      <h2>Score du match</h2>
+      <div class="section-line" style="transform:scaleX(-1)"></div>
+    </div>
+    <div class="match-score-hero">
+      <div class="match-hero-top">
+        <span class="field-label">${m.day.split("-").reverse().join("/")} · ${m.time} · ${m.field}</span>
+        ${statusBadge(m.status)}
+      </div>
+      <div class="match-hero-body">
+        <div class="hero-team">
+          <div class="hero-team-badge" style="background:${home.color};color:${home.textColor};width:72px;height:72px;font-size:20px">${home.short}</div>
+          <div class="hero-team-name">${home.name}</div>
+          <div class="hero-team-coach">Coach : ${home.coach}</div>
+        </div>
+        <div class="hero-score-center">
+          ${scoreHtml}
+          <div class="hero-time-info">${m.time} — ${m.field}</div>
+        </div>
+        <div class="hero-team">
+          <div class="hero-team-badge" style="background:${away.color};color:${away.textColor};width:72px;height:72px;font-size:20px">${away.short}</div>
+          <div class="hero-team-name">${away.name}</div>
+          <div class="hero-team-coach">Coach : ${away.coach}</div>
+        </div>
+      </div>
+      <div class="events-list">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:6px">Événements du match</div>
+        ${eventsHtml}
+      </div>
+    </div>
+
+    <!-- 4. COMPOSITIONS -->
+    <div class="section-header" style="margin-top:32px">
+      <div class="section-line"></div>
+      <h2>Compositions des équipes</h2>
+      <div class="section-line" style="transform:scaleX(-1)"></div>
+    </div>
+    <div class="lineup-grid">
+      ${lineupCard(home)}
+      ${lineupCard(away)}
+    </div>
+  `;
+}
+
+/* ===== LECTURE DE L'URL ===== */
+const params = new URLSearchParams(window.location.search);
+const matchId = params.get("id") || "m1";
+render(matchId);
+</script>
+</body>
+</html>
