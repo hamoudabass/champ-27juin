@@ -1,0 +1,568 @@
+/* =========================================================
+   PALETTE DJIBOUTI
+   Bleu ciel   : #009EDB  (ciel de Djibouti)
+   Vert        : #007A3D  (bande verte du drapeau)
+   Blanc       : #FFFFFF
+   Rouge       : #CE1126  (étoile rouge)
+   Sable/Or    : #C8A96E  (désert)
+   Nuit        : #0A1628  (ciel nocturne)
+   ========================================================= */
+
+:root {
+  --dj-blue: #009edb;
+  --dj-green: #007a3d;
+  --dj-red: #ce1126;
+  --dj-white: #ffffff;
+  --dj-sand: #c8a96e;
+  --dj-night: #0a1628;
+  --dj-dark: #0f1f3d;
+  --dj-mid: #1a3358;
+  --dj-card: #162a4a;
+  --text-dim: #8ba3c0;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Barlow", sans-serif;
+  background: var(--dj-night);
+  color: var(--dj-white);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== FOND ÉTOILÉ / TEXTURE ===== */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 80% 50% at 50% -10%,
+      rgba(0, 158, 219, 0.12) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 40% 30% at 80% 80%,
+      rgba(0, 122, 61, 0.08) 0%,
+      transparent 60%
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ===== HEADER ===== */
+header {
+  position: relative;
+  z-index: 10;
+  background: var(--dj-dark);
+  border-bottom: 2px solid var(--dj-blue);
+  padding: 0;
+}
+
+.header-flag-bar {
+  height: 5px;
+  background: linear-gradient(90deg, var(--dj-blue) 50%, var(--dj-green) 50%);
+}
+
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.header-logo-zone {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Logo SVG du championnat */
+.logo-emblem {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+}
+
+.header-titles h1 {
+  font-family: "Oswald", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dj-white);
+  line-height: 1.1;
+}
+
+.header-titles h1 span {
+  color: var(--dj-blue);
+}
+
+.header-titles p {
+  font-size: 12px;
+  color: var(--dj-sand);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 3px;
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 600;
+}
+
+.header-date-badge {
+  background: var(--dj-blue);
+  color: var(--dj-white);
+  font-family: "Oswald", sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 1px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  text-align: center;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.header-date-badge span {
+  display: block;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* ===== BANDEAU SPONSORS DÉFILANT ===== */
+.sponsors-bar {
+  position: relative;
+  z-index: 9;
+  background: var(--dj-mid);
+  border-bottom: 1px solid rgba(0, 158, 219, 0.3);
+  overflow: hidden;
+  height: 52px;
+}
+
+.sponsors-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: var(--dj-blue);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  z-index: 2;
+  white-space: nowrap;
+}
+
+.sponsors-scroll-wrap {
+  margin-left: 120px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.sponsors-track {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  white-space: nowrap;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sponsor-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+  cursor: default;
+}
+
+.sponsor-item.active-sponsor {
+  opacity: 1;
+}
+
+.sponsor-logo-box {
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Oswald", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.sponsor-name {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--dj-white);
+  letter-spacing: 0.5px;
+}
+
+.sponsor-type {
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 1px;
+}
+
+/* ===== NAVIGATION JOURS ===== */
+.main-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 30px 20px 60px;
+}
+
+.days-nav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.day-btn {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 9px 18px;
+  border-radius: 4px;
+  border: 1.5px solid rgba(0, 158, 219, 0.3);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.day-btn:hover {
+  border-color: var(--dj-blue);
+  color: var(--dj-white);
+}
+
+.day-btn.active {
+  background: var(--dj-blue);
+  border-color: var(--dj-blue);
+  color: var(--dj-white);
+}
+
+/* ===== SECTION JOUR ===== */
+.day-section {
+  display: none;
+}
+.day-section.active {
+  display: block;
+}
+
+.day-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.day-header-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(0, 158, 219, 0.4), transparent);
+}
+
+.day-header h2 {
+  font-family: "Oswald", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--dj-sand);
+  white-space: nowrap;
+}
+
+/* ===== CARTE MATCH ===== */
+.matches-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.match-card {
+  background: var(--dj-card);
+  border: 1px solid rgba(0, 158, 219, 0.15);
+  border-radius: 8px;
+  padding: 0;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    transform 0.15s;
+  overflow: hidden;
+  position: relative;
+}
+
+.match-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 8px 0 0 8px;
+}
+
+.match-card.status-live::before {
+  background: var(--dj-red);
+}
+.match-card.status-half::before {
+  background: var(--dj-sand);
+}
+.match-card.status-done::before {
+  background: #3a5070;
+}
+.match-card.status-upcoming::before {
+  background: var(--dj-green);
+}
+
+.match-card:hover {
+  border-color: rgba(0, 158, 219, 0.5);
+  transform: translateY(-1px);
+}
+
+.match-card-inner {
+  padding: 16px 20px;
+  display: grid;
+  grid-template-columns: 80px 1fr auto 1fr 80px;
+  align-items: center;
+  gap: 12px;
+}
+
+.match-time-col {
+  text-align: center;
+}
+
+.match-time {
+  font-family: "Oswald", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--dj-blue);
+}
+
+.match-field {
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 2px;
+  font-family: "Barlow Condensed", sans-serif;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.match-team {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.match-team.team-home {
+  justify-content: flex-end;
+}
+.match-team.team-away {
+  justify-content: flex-start;
+}
+
+.team-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Oswald", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.team-name {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--dj-white);
+}
+
+.team-short {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 1px;
+}
+
+.match-score-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  min-width: 120px;
+}
+
+.score-box {
+  font-family: "Oswald", sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.score-sep {
+  font-family: "Oswald", sans-serif;
+  font-size: 20px;
+  color: var(--text-dim);
+  padding: 0 6px;
+}
+
+.match-status-col {
+  text-align: center;
+  min-width: 80px;
+}
+
+/* STATUT BADGES */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 3px;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.badge-live {
+  background: rgba(206, 17, 38, 0.2);
+  color: #ff4d6a;
+  border: 1px solid rgba(206, 17, 38, 0.4);
+}
+
+.badge-live .dot {
+  width: 6px;
+  height: 6px;
+  background: var(--dj-red);
+  border-radius: 50%;
+  animation: pulse 1.2s infinite;
+}
+
+.badge-half {
+  background: rgba(200, 169, 110, 0.2);
+  color: var(--dj-sand);
+  border: 1px solid rgba(200, 169, 110, 0.4);
+}
+
+.badge-done {
+  background: rgba(58, 80, 112, 0.4);
+  color: var(--text-dim);
+  border: 1px solid rgba(58, 80, 112, 0.6);
+}
+
+.badge-upcoming {
+  background: rgba(0, 122, 61, 0.15);
+  color: #2ecc71;
+  border: 1px solid rgba(0, 122, 61, 0.4);
+}
+
+.click-hint {
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  letter-spacing: 0.5px;
+  font-family: "Barlow Condensed", sans-serif;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+}
+
+/* ===== FOOTER ===== */
+footer {
+  position: relative;
+  z-index: 1;
+  background: var(--dj-dark);
+  border-top: 1px solid rgba(0, 158, 219, 0.2);
+  padding: 20px;
+  text-align: center;
+}
+
+.footer-flag {
+  height: 3px;
+  background: linear-gradient(90deg, var(--dj-blue) 50%, var(--dj-green) 50%);
+  margin-bottom: 16px;
+}
+
+footer p {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: "Barlow Condensed", sans-serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+footer strong {
+  color: var(--dj-sand);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 700px) {
+  .match-card-inner {
+    grid-template-columns: 60px 1fr auto 1fr;
+    font-size: 13px;
+  }
+  .match-status-col {
+    display: none;
+  }
+  .team-name {
+    font-size: 13px;
+  }
+  .score-box {
+    font-size: 22px;
+    width: 36px;
+    height: 36px;
+  }
+  .header-inner {
+    flex-wrap: wrap;
+  }
+  .header-date-badge {
+    display: none;
+  }
+}
