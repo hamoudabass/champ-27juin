@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Connexion Admin</title>
+  </head>
+  <body>
+    <h2>Connexion Administrateur</h2>
+
+    <input id="email" type="email" placeholder="Email" />
+
+    <input id="password" type="password" placeholder="Mot de passe" />
+
+    <button id="loginBtn">Se connecter</button>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+
+      import {
+        getAuth,
+        signInWithEmailAndPassword,
+      } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCnpck3ez1b1oD9A9-cfMKMPm1I1WONXYY",
+        authDomain: "championnat-alisabieh-2026.firebaseapp.com",
+        projectId: "championnat-alisabieh-2026",
+        storageBucket: "championnat-alisabieh-2026.firebasestorage.app",
+        messagingSenderId: "971207034843",
+        appId: "1:971207034843:web:dac112b526239ff75fc9fe",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      document
+        .getElementById("loginBtn")
+        .addEventListener("click", async () => {
+          const email = document.getElementById("email").value;
+
+          const password = document.getElementById("password").value;
+
+          try {
+            await signInWithEmailAndPassword(auth, email, password);
+
+            window.location = "admin.html";
+          } catch (error) {
+            alert(error.message);
+          }
+        });
+    </script>
+  </body>
+</html>
