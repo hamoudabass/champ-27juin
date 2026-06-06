@@ -234,12 +234,25 @@ header {
   padding: 30px 20px 60px;
 }
 
+/* Barre défilante horizontale */
+.days-nav-wrap {
+  position: relative;
+  margin-bottom: 28px;
+}
+
 .days-nav {
   display: flex;
   gap: 8px;
-  margin-bottom: 28px;
-  flex-wrap: wrap;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  padding-bottom: 4px;
 }
+
+.days-nav::-webkit-scrollbar {
+  display: none;
+} /* Chrome/Safari */
 
 .day-btn {
   font-family: "Barlow Condensed", sans-serif;
@@ -254,6 +267,8 @@ header {
   color: var(--text-dim);
   cursor: pointer;
   transition: all 0.2s;
+  white-space: nowrap; /* empêche le retour à la ligne */
+  flex-shrink: 0;
 }
 
 .day-btn:hover {
@@ -542,27 +557,86 @@ footer strong {
   color: var(--dj-sand);
 }
 
-/* ===== RESPONSIVE ===== */
+/* ===== RESPONSIVE 700px ===== */
 @media (max-width: 700px) {
-  .match-card-inner {
-    grid-template-columns: 60px 1fr auto 1fr;
-    font-size: 13px;
-  }
-  .match-status-col {
-    display: none;
-  }
-  .team-name {
-    font-size: 13px;
-  }
-  .score-box {
-    font-size: 22px;
-    width: 36px;
-    height: 36px;
-  }
   .header-inner {
     flex-wrap: wrap;
   }
   .header-date-badge {
     display: none;
+  }
+}
+
+/* ===== RESPONSIVE MOBILE < 500px ===== */
+@media (max-width: 500px) {
+  /* Header compact */
+  .header-titles h1 {
+    font-size: 16px;
+  }
+  .header-titles p {
+    font-size: 10px;
+  }
+  .logo-emblem {
+    width: 44px;
+    height: 44px;
+  }
+
+  /* Carte match : 4 colonnes compactes
+     [heure] [équipe dom] [score] [équipe ext] + badge statut en dessous */
+  .match-card-inner {
+    grid-template-columns: 48px 1fr auto 1fr;
+    gap: 6px;
+    padding: 10px 10px 6px;
+  }
+
+  /* Cacher la 5e colonne statut (on le remet en bas) */
+  .match-status-col {
+    display: none;
+  }
+
+  /* Heure */
+  .match-time {
+    font-size: 13px;
+  }
+  .match-field {
+    font-size: 9px;
+  }
+
+  /* Noms équipes */
+  .team-name {
+    font-size: 12px;
+    letter-spacing: 0;
+  }
+
+  /* Badge équipe */
+  .team-badge {
+    width: 26px;
+    height: 26px;
+    font-size: 9px;
+  }
+
+  /* Score */
+  .score-box {
+    font-size: 18px;
+    width: 28px;
+    height: 28px;
+  }
+  .score-sep {
+    font-size: 14px;
+    padding: 0 3px;
+  }
+
+  /* Bande statut sous la carte */
+  .match-card-inner::after {
+    content: attr(data-status-label);
+    grid-column: 1 / -1;
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 4px 0 2px;
+    color: var(--text-dim);
   }
 }
