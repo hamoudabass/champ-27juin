@@ -337,6 +337,50 @@ function render() {
 
   /* ── Assemblage ── */
   appEl.innerHTML = `
+    <!-- ③ SCORE DU MATCH -->
+    <div class="section-header" style="margin-top:32px">
+      <div class="section-line"></div>
+      <h2>Score du match</h2>
+      <div class="section-line" style="transform:scaleX(-1)"></div>
+    </div>
+    <div class="match-score-hero">
+      <div class="match-hero-top">
+        <span class="field-label">
+          ${dateFormatted} · ${m.time || "--:--"} · ${m.field || ""}
+        </span>
+        ${statusBadge(m.status || "upcoming")}
+      </div>
+      <div class="match-hero-body">
+        <div class="hero-team">
+          <div class="hero-team-badge"
+               style="background:${homeColor};color:${homeTxt};
+                      width:72px;height:72px;font-size:22px">
+            ${initials(homeName)}
+          </div>
+          <div class="hero-team-name">${homeName}</div>
+        </div>
+        <div class="hero-score-center">
+          ${scoreHtml}
+          <div class="hero-time-info">${m.time || ""} — ${m.field || ""}</div>
+        </div>
+        <div class="hero-team">
+          <div class="hero-team-badge"
+               style="background:${awayColor};color:${awayTxt};
+                      width:72px;height:72px;font-size:22px">
+            ${initials(awayName)}
+          </div>
+          <div class="hero-team-name">${awayName}</div>
+        </div>
+      </div>
+      <div class="events-list">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;
+                    letter-spacing:2px;text-transform:uppercase;
+                    color:var(--text-dim);margin-bottom:8px">
+          Événements du match
+        </div>
+        ${eventsHtml}
+      </div>
+    </div>
 
     <!-- ① CLASSEMENTS A & B -->
     <div class="section-header">
@@ -388,50 +432,6 @@ function render() {
       </div>
     </div>
 
-    <!-- ③ SCORE DU MATCH -->
-    <div class="section-header" style="margin-top:32px">
-      <div class="section-line"></div>
-      <h2>Score du match</h2>
-      <div class="section-line" style="transform:scaleX(-1)"></div>
-    </div>
-    <div class="match-score-hero">
-      <div class="match-hero-top">
-        <span class="field-label">
-          ${dateFormatted} · ${m.time || "--:--"} · ${m.field || ""}
-        </span>
-        ${statusBadge(m.status || "upcoming")}
-      </div>
-      <div class="match-hero-body">
-        <div class="hero-team">
-          <div class="hero-team-badge"
-               style="background:${homeColor};color:${homeTxt};
-                      width:72px;height:72px;font-size:22px">
-            ${initials(homeName)}
-          </div>
-          <div class="hero-team-name">${homeName}</div>
-        </div>
-        <div class="hero-score-center">
-          ${scoreHtml}
-          <div class="hero-time-info">${m.time || ""} — ${m.field || ""}</div>
-        </div>
-        <div class="hero-team">
-          <div class="hero-team-badge"
-               style="background:${awayColor};color:${awayTxt};
-                      width:72px;height:72px;font-size:22px">
-            ${initials(awayName)}
-          </div>
-          <div class="hero-team-name">${awayName}</div>
-        </div>
-      </div>
-      <div class="events-list">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;
-                    letter-spacing:2px;text-transform:uppercase;
-                    color:var(--text-dim);margin-bottom:8px">
-          Événements du match
-        </div>
-        ${eventsHtml}
-      </div>
-    </div>
   `;
 }
 
