@@ -136,94 +136,119 @@ header {
   font-weight: 700;
 }
 
-/* ===== BANDEAU SPONSORS DÉFILANT ===== */
+/* ===== BANDEAU SPONSORS — DÉFILEMENT CSS PUR ===== */
 .sponsors-bar {
   position: relative;
   z-index: 9;
   background: var(--dj-mid);
   border-bottom: 1px solid rgba(0, 158, 219, 0.3);
   overflow: hidden;
-  height: 52px;
+  height: 64px;
+  display: flex;
+  align-items: center;
 }
 
+/* Étiquette "Partenaires" fixe à gauche */
 .sponsors-label {
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
+  left: 0; top: 0; bottom: 0;
   background: var(--dj-blue);
   display: flex;
   align-items: center;
   padding: 0 16px;
   font-family: "Barlow Condensed", sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  z-index: 2;
-  white-space: nowrap;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  z-index: 3; white-space: nowrap;
 }
 
+/* Zone défilante — masque ce qui déborde */
 .sponsors-scroll-wrap {
   margin-left: 120px;
+  flex: 1;
   height: 100%;
-  display: flex;
-  align-items: center;
   overflow: hidden;
   position: relative;
+  /* Dégradé fondu sur les bords */
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 6%,
+    black 94%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 6%,
+    black 94%,
+    transparent 100%
+  );
 }
 
+/* Track — contient les images × 2 pour le loop infini */
 .sponsors-track {
   display: flex;
   align-items: center;
-  gap: 48px;
-  white-space: nowrap;
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  gap: 32px;
+  /* Largeur calculée dynamiquement via CSS custom property */
+  animation: sponsorScroll 20s linear infinite;
+  width: max-content;
 }
 
+/* Pause au survol */
+.sponsors-scroll-wrap:hover .sponsors-track {
+  animation-play-state: paused;
+}
+
+/* Animation défilement infini vers la gauche */
+@keyframes sponsorScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Chaque item sponsor */
 .sponsor-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
   flex-shrink: 0;
-  opacity: 0.7;
-  transition: opacity 0.3s;
   cursor: default;
 }
 
-.sponsor-item.active-sponsor {
-  opacity: 1;
+/* Image carrée du sponsor */
+.sponsor-img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 3px;
+  transition: transform 0.3s, border-color 0.3s;
 }
 
-.sponsor-logo-box {
-  width: 34px;
-  height: 34px;
-  border-radius: 6px;
+.sponsor-item:hover .sponsor-img {
+  transform: scale(1.1);
+  border-color: rgba(0, 158, 219, 0.5);
+}
+
+/* Fallback texte si image absente */
+.sponsor-img-fallback {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: var(--dj-card);
+  border: 1px solid rgba(0, 158, 219, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: "Oswald", sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  flex-shrink: 0;
-}
-
-.sponsor-name {
-  font-family: "Barlow Condensed", sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--dj-white);
-  letter-spacing: 0.5px;
-}
-
-.sponsor-type {
-  font-size: 10px;
+  font-size: 11px; font-weight: 700;
   color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-top: 1px;
 }
+
+
 
 /* ===== NAVIGATION JOURS ===== */
 .main-content {

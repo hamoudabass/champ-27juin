@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> Coupe 27 Juin - Association APDS</title>
+    <title>Coupe 27 Juin - Association APDS</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&display=swap"
       rel="stylesheet"
@@ -45,20 +45,166 @@
       </div>
     </header>
 
-    <!-- ===== BANDEAU SPONSORS DÉFILANT ===== -->
-    <!--
-  PARTENAIRES & SPONSORS
-  Pour modifier : éditez le tableau `sponsors` dans le script en bas de page.
-  Chaque entrée : { name, shortName, type, color, bg }
--->
+    <!-- ===== BANDEAU SPONSORS DÉFILANT (CSS PUR) =====
+         COMMENT MODIFIER :
+         1. Ajoutez vos images dans assets/images/sponsors/
+         2. Dupliquez un bloc <div class="sponsor-item"> dans CHAQUE groupe
+            (groupe 1 ET groupe 2 doivent être identiques pour le loop infini)
+         3. Remplacez src="..." par le chemin de votre image
+         4. Ajustez la durée dans style.css : animation: sponsorScroll 20s
+            (plus le nombre est grand, plus c'est lent)
+    ===================================================== -->
     <div class="sponsors-bar">
       <div class="sponsors-label">Partenaires</div>
       <div class="sponsors-scroll-wrap">
-        <div class="sponsors-track" id="sponsorsTrack">
-          <!-- Rempli par JS -->
+        <div class="sponsors-track">
+          <!-- ══ GROUPE 1 (original) ══ -->
+
+          <!-- SPONSOR 1 — remplacez src par votre image -->
+          <div class="sponsor-item">
+            <img
+              class="sponsor-img"
+              src="assets/images/sponsors/sponsor1.png"
+              alt="Sponsor 1"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <div class="sponsor-img-fallback" style="display: none">SP1</div>
+          </div>
+
+          <!-- SPONSOR 2 -->
+          <div class="sponsor-item">
+            <img
+              class="sponsor-img"
+              src="assets/images/sponsors/sponsor2.png"
+              alt="Sponsor 2"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <div class="sponsor-img-fallback" style="display: none">SP2</div>
+          </div>
+
+          <!-- SPONSOR 3 -->
+          <div class="sponsor-item">
+            <img
+              class="sponsor-img"
+              src="assets/images/sponsors/sponsor3.png"
+              alt="Sponsor 3"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <div class="sponsor-img-fallback" style="display: none">SP3</div>
+          </div>
+
+          <!-- SPONSOR 4 -->
+          <div class="sponsor-item">
+            <img
+              class="sponsor-img"
+              src="assets/images/sponsors/sponsor4.png"
+              alt="Sponsor 4"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <div class="sponsor-img-fallback" style="display: none">SP4</div>
+          </div>
+
+          <!-- SPONSOR 5 -->
+          <div class="sponsor-item">
+            <img
+              class="sponsor-img"
+              src="assets/images/sponsors/sponsor5.png"
+              alt="Sponsor 5"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <div class="sponsor-img-fallback" style="display: none">SP5</div>
+          </div>
+
+          <!-- ══ GROUPE 2 (copie exacte du groupe 1 — NE PAS MODIFIER) ══
+               Ce doublon est nécessaire pour que l'animation boucle
+               sans saut visible.
+          ══════════════════════════════════════════════════════════════ -->
+
+          <div class="sponsor-item">
+            <img
+              class="sponsor-img"
+              src="assets/images/sponsors/sponsor1.png"
+              alt="Sponsor 1"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <div class="sponsor-img-fallback" style="display: none">SP1</div>
+          </div>
+
+          <div class="sponsor-item">
+            <img
+              class="sponsor-img"
+              src="assets/images/sponsors/sponsor2.png"
+              alt="Sponsor 2"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <div class="sponsor-img-fallback" style="display: none">SP2</div>
+          </div>
+
+          <div class="sponsor-item">
+            <img
+              class="sponsor-img"
+              src="assets/images/sponsors/sponsor3.png"
+              alt="Sponsor 3"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <div class="sponsor-img-fallback" style="display: none">SP3</div>
+          </div>
+
+          <div class="sponsor-item">
+            <img
+              class="sponsor-img"
+              src="assets/images/sponsors/sponsor4.png"
+              alt="Sponsor 4"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <div class="sponsor-img-fallback" style="display: none">SP4</div>
+          </div>
+
+          <div class="sponsor-item">
+            <img
+              class="sponsor-img"
+              src="assets/images/sponsors/sponsor5.png"
+              alt="Sponsor 5"
+              onerror="
+                this.style.display = 'none';
+                this.nextElementSibling.style.display = 'flex';
+              "
+            />
+            <div class="sponsor-img-fallback" style="display: none">SP5</div>
+          </div>
         </div>
+        <!-- /sponsors-track -->
       </div>
+      <!-- /sponsors-scroll-wrap -->
     </div>
+    <!-- /sponsors-bar -->
 
     <!-- ===== CONTENU PRINCIPAL ===== -->
     <main class="main-content">
