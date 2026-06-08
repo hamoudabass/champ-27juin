@@ -184,6 +184,7 @@ function eventIcon(type, scored) {
   if (type === "yellow") return "🟨";
   if (type === "red") return "🟥";
   if (type === "penalty") return scored ? "⚽ pen." : "❌ pen.";
+  if (type === "forfait") return "🚫 Forfait"
   return "•";
 }
 

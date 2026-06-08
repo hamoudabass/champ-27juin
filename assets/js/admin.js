@@ -232,9 +232,12 @@ window.addEvent = async () => {
   const minuteRaw = document.getElementById("eventMinute").value;
   const playerName = document.getElementById("eventPlayer").value.trim();
 
-  if (!matchId || !teamId || !minuteRaw || !playerName) {
-    toast("Remplissez tous les champs", false);
-    return;
+  const isForfait = type === "forfait";
+  if (!matchId || !teamId) {
+    toast("Selectionnez un match et une equipe", false); return;
+  }
+  if (!isForfait && (!minuteRaw || !playerName)) {
+    toast("Remplissez tous les champs", false); return;
   }
 
   const minute = Number(minuteRaw);
@@ -246,7 +249,7 @@ window.addEvent = async () => {
 
   const event = {
     type,
-    minute,
+    minute: isForfait ? 0 : parseInt(minuteRaw),
     teamId,
     playerName,
   };
