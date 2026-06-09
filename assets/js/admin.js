@@ -216,6 +216,17 @@ window.saveMatch = async () => {
     update.scoreAway = parseInt(saRaw);
   }
 
+  // Arbitres — on sauvegarde seulement si au moins le principal est renseigné
+  const principal = document.getElementById("arbitrePrincipal").value.trim();
+  const assistant1 = document.getElementById("arbitreAssistant1").value.trim();
+
+  if (principal) {
+    update.arbitres = {
+      principal,
+      assistant1: assistant1 || "",
+    };
+  }
+
   try {
     await updateDoc(doc(db, "matches", id), update);
     toast("Match mis à jour ✓");
@@ -234,10 +245,12 @@ window.addEvent = async () => {
 
   const isForfait = type === "forfait";
   if (!matchId || !teamId) {
-    toast("Selectionnez un match et une equipe", false); return;
+    toast("Selectionnez un match et une equipe", false);
+    return;
   }
   if (!isForfait && (!minuteRaw || !playerName)) {
-    toast("Remplissez tous les champs", false); return;
+    toast("Remplissez tous les champs", false);
+    return;
   }
 
   const minute = Number(minuteRaw);
