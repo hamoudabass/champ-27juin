@@ -1,379 +1,567 @@
 <!doctype html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Administration — Championnat Alisabieh 2026</title>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Barlow:wght@400;500&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="assets/css/admin.css"/>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Administration — Championnat Alisabieh 2026</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Barlow:wght@400;500&family=Barlow+Condensed:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/admin.css" />
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header>
+      <div class="flag-bar"></div>
+      <div class="header-inner">
+        <div class="header-logo">
+          <svg width="36" height="36" viewBox="0 0 64 64" fill="none">
+            <circle
+              cx="32"
+              cy="32"
+              r="30"
+              fill="#0F1F3D"
+              stroke="#009EDB"
+              stroke-width="2"
+            />
+            <polygon
+              points="32,8 36,24 52,24 39,34 44,50 32,41 20,50 25,34 12,24 28,24"
+              fill="none"
+              stroke="#009EDB"
+              stroke-width="1.5"
+            />
+            <polygon points="15,44 15,20 26,32" fill="#CE1126" opacity="0.8" />
+          </svg>
+          <div>
+            <div class="header-title">Administration</div>
+            <div class="header-sub">Championnat Alisabieh 2026</div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px">
+          <a href="index.html" class="btn-outline" target="_blank"
+            >Voir le site →</a
+          >
+          <button id="logoutBtn" class="btn-danger-outline">Déconnexion</button>
+        </div>
+      </div>
+    </header>
 
-<!-- HEADER -->
-<header>
-  <div class="flag-bar"></div>
-  <div class="header-inner">
-    <div class="header-logo">
-      <svg width="36" height="36" viewBox="0 0 64 64" fill="none">
-        <circle cx="32" cy="32" r="30" fill="#0F1F3D" stroke="#009EDB" stroke-width="2"/>
-        <polygon points="32,8 36,24 52,24 39,34 44,50 32,41 20,50 25,34 12,24 28,24"
-                 fill="none" stroke="#009EDB" stroke-width="1.5"/>
-        <polygon points="15,44 15,20 26,32" fill="#CE1126" opacity="0.8"/>
-      </svg>
-      <div>
-        <div class="header-title">Administration</div>
-        <div class="header-sub">Championnat Alisabieh 2026</div>
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast"></div>
+
+    <!-- NAVIGATION ONGLETS -->
+    <div class="tabs-bar">
+      <div class="tabs-inner">
+        <button
+          class="tab-btn active"
+          data-tab="tab-matches"
+          onclick="showTab('tab-matches')"
+        >
+          ⚽ Matchs
+        </button>
+        <button
+          class="tab-btn"
+          data-tab="tab-teams"
+          onclick="showTab('tab-teams')"
+        >
+          🏅 Équipes
+        </button>
+        <button
+          class="tab-btn"
+          data-tab="tab-sponsors"
+          onclick="showTab('tab-sponsors')"
+        >
+          🤝 Sponsors
+        </button>
       </div>
     </div>
-    <div style="display:flex;align-items:center;gap:12px">
-      <a href="index.html" class="btn-outline" target="_blank">Voir le site →</a>
-      <button id="logoutBtn" class="btn-danger-outline">Déconnexion</button>
-    </div>
-  </div>
-</header>
 
-<!-- TOAST NOTIFICATION -->
-<div id="toast"></div>
-
-<!-- NAVIGATION ONGLETS -->
-<div class="tabs-bar">
-  <div class="tabs-inner">
-    <button class="tab-btn active" data-tab="tab-matches" onclick="showTab('tab-matches')">
-      ⚽ Matchs
-    </button>
-    <button class="tab-btn" data-tab="tab-teams" onclick="showTab('tab-teams')">
-      🏅 Équipes
-    </button>
-    <button class="tab-btn" data-tab="tab-sponsors" onclick="showTab('tab-sponsors')">
-      🤝 Sponsors
-    </button>
-  </div>
-</div>
-
-<main class="admin-content">
-
-  <!-- ═══════════════════════════════════════
+    <main class="admin-content">
+      <!-- ═══════════════════════════════════════
        ONGLET 1 — MATCHS
        ═══════════════════════════════════════ -->
-  <div id="tab-matches" class="tab-section active">
+      <div id="tab-matches" class="tab-section active">
+        <!-- Créer un match -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-icon">➕</span>
+            <h2>Nouveau match</h2>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Date *</label>
+              <input type="date" id="newDay" />
+            </div>
+            <div class="form-group">
+              <label>Heure *</label>
+              <input type="time" id="newTime" />
+            </div>
+            <div class="form-group">
+              <label>Équipe domicile *</label>
+              <select id="homeTeam">
+                <option value="">— Choisir —</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Équipe extérieure *</label>
+              <select id="awayTeam">
+                <option value="">— Choisir —</option>
+              </select>
+            </div>
+            <div class="form-group full-width">
+              <label>Terrain</label>
+              <input
+                type="text"
+                id="field"
+                placeholder="Ex: Terrain Principal"
+              />
+            </div>
+          </div>
+          <button onclick="createMatch()" class="btn-primary">
+            Créer le match
+          </button>
+        </div>
 
-    <!-- Créer un match -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-icon">➕</span>
-        <h2>Nouveau match</h2>
-      </div>
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Date *</label>
-          <input type="date" id="newDay"/>
-        </div>
-        <div class="form-group">
-          <label>Heure *</label>
-          <input type="time" id="newTime"/>
-        </div>
-        <div class="form-group">
-          <label>Équipe domicile *</label>
-          <select id="homeTeam">
-            <option value="">— Choisir —</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Équipe extérieure *</label>
-          <select id="awayTeam">
-            <option value="">— Choisir —</option>
-          </select>
-        </div>
-        <div class="form-group full-width">
-          <label>Terrain</label>
-          <input type="text" id="field" placeholder="Ex: Terrain Principal"/>
-        </div>
-      </div>
-      <button onclick="createMatch()" class="btn-primary">Créer le match</button>
-    </div>
+        <!-- Mettre à jour score + statut -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-icon">📝</span>
+            <h2>Mettre à jour score &amp; statut</h2>
+          </div>
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label>Match *</label>
+              <select id="matchSelect">
+                <option value="">— Choisir un match —</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Score domicile</label>
+              <input type="number" id="scoreHome" min="0" placeholder="0" />
+            </div>
+            <div class="form-group">
+              <label>Score extérieur</label>
+              <input type="number" id="scoreAway" min="0" placeholder="0" />
+            </div>
+            <div class="form-group full-width">
+              <label>Statut *</label>
+              <select id="status">
+                <option value="upcoming">À venir</option>
+                <option value="live">En cours</option>
+                <option value="half">Mi-temps</option>
+                <option value="done">Terminé</option>
+              </select>
+            </div>
+          </div>
 
-    <!-- Mettre à jour score + statut -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-icon">📝</span>
-        <h2>Mettre à jour score &amp; statut</h2>
-      </div>
-      <div class="form-grid">
-        <div class="form-group full-width">
-          <label>Match *</label>
-          <select id="matchSelect">
-            <option value="">— Choisir un match —</option>
-          </select>
+          <!-- ARBITRES -->
+          <div class="form-group full-width">
+            <label>⚖️ Arbitre principal</label>
+            <input
+              type="text"
+              id="arbitrePrincipal"
+              placeholder="Nom de l'arbitre principal"
+            />
+          </div>
+          <div class="form-group">
+            <label>👤 Assistant 1</label>
+            <input
+              type="text"
+              id="arbitreAssistant1"
+              placeholder="Nom de l'assistant 1"
+            />
+          </div>
+          <button onclick="saveMatch()" class="btn-primary">Enregistrer</button>
         </div>
-        <div class="form-group">
-          <label>Score domicile</label>
-          <input type="number" id="scoreHome" min="0" placeholder="0"/>
-        </div>
-        <div class="form-group">
-          <label>Score extérieur</label>
-          <input type="number" id="scoreAway" min="0" placeholder="0"/>
-        </div>
-        <div class="form-group full-width">
-          <label>Statut *</label>
-          <select id="status">
-            <option value="upcoming">À venir</option>
-            <option value="live">En cours</option>
-            <option value="half">Mi-temps</option>
-            <option value="done">Terminé</option>
-          </select>
-        </div>
-      </div>
-      <button onclick="saveMatch()" class="btn-primary">Enregistrer</button>
-    </div>
 
-    <!-- Ajouter un événement -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-icon">⚡</span>
-        <h2>Ajouter un événement</h2>
-      </div>
-      <div class="form-grid">
-        <div class="form-group full-width">
-          <label>Match *</label>
-          <select id="eventMatch">
-            <option value="">— Choisir un match —</option>
-          </select>
-        </div>
-        <div class="form-group full-width">
-          <label>Équipe concernée *</label>
-          <select id="matchTeamSelect">
-            <option value="">— Choisir l'équipe —</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Type d'événement *</label>
-          <select id="eventType">
-            <option value="goal">⚽ But</option>
-            <option value="yellow">🟨 Carton Jaune</option>
-            <option value="red">🟥 Carton Rouge</option>
-            <option value="penalty">⚡ Penalty</option>
-            <option value="forfait">🚫 Forfait</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Minute *</label>
-          <input type="number" id="eventMinute" min="1" max="120" placeholder="Ex: 45"/>
-        </div>
-        <div class="form-group full-width">
-          <label>Nom du joueur *</label>
-          <input type="text" id="eventPlayer" placeholder="Prénom Nom"/>
-        </div>
-      </div>
-      <button onclick="addEvent()" class="btn-primary">Ajouter l'événement</button>
-    </div>
+        <!-- Ajouter un événement -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-icon">⚡</span>
+            <h2>Ajouter un événement</h2>
+          </div>
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label>Match *</label>
+              <select id="eventMatch">
+                <option value="">— Choisir un match —</option>
+              </select>
+            </div>
+            <div class="form-group full-width">
+              <label>Équipe concernée *</label>
+              <select id="matchTeamSelect">
+                <option value="">— Choisir l'équipe —</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Type d'événement *</label>
+              <select id="eventType">
+                <option value="goal">⚽ But</option>
+                <option value="yellow">🟨 Carton Jaune</option>
+                <option value="red">🟥 Carton Rouge</option>
+                <option value="penalty">⚡ Penalty</option>
+                <option value="forfait">🚫 Forfait</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Minute *</label>
+              <input
+                type="number"
+                id="eventMinute"
+                min="1"
+                max="120"
+                placeholder="Ex: 45"
+              />
+            </div>
+            <div class="form-group full-width">
+              <label>Nom du joueur *</label>
+              <input type="text" id="eventPlayer" placeholder="Prénom Nom" />
+            </div>
+          </div>
 
-    <!-- Liste des matchs -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-icon">📋</span>
-        <h2>Liste des matchs</h2>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Date / Heure</th>
-              <th>Domicile</th>
-              <th>Extérieur</th>
-              <th>Score</th>
-              <th>Statut</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="matchesTableBody">
-            <tr><td colspan="6" style="text-align:center;color:var(--text-dim)">Chargement…</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </div><!-- /tab-matches -->
-
-  <!-- ═══════════════════════════════════════
-       ONGLET 2 — ÉQUIPES
-       ═══════════════════════════════════════ -->
-  <div id="tab-teams" class="tab-section">
-
-    <!-- Créer une équipe -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-icon">➕</span>
-        <h2>Ajouter une équipe</h2>
-      </div>
-      <div class="form-grid">
-        <div class="form-group full-width">
-          <label>Nom de l'équipe *</label>
-          <input type="text" id="teamName" placeholder="Ex: Château d'Eau"/>
+          <button onclick="addEvent()" class="btn-primary">
+            Ajouter l'événement
+          </button>
         </div>
-        <div class="form-group">
-          <label>Numéro de téléphone</label>
-          <input type="tel" id="teamPhone" placeholder="77 00 00 00"/>
-        </div>
-        <div class="form-group">
-          <label>Couleur de l'équipe</label>
-          <div style="display:flex;align-items:center;gap:10px">
-            <input type="color" id="teamColor" value="#009EDB"
-                   style="width:50px;height:38px;padding:2px;cursor:pointer"/>
-            <span style="font-size:12px;color:var(--text-dim)">
-              La couleur du texte s'ajuste automatiquement
-            </span>
+
+        <!-- Liste des matchs -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-icon">📋</span>
+            <h2>Liste des matchs</h2>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date / Heure</th>
+                  <th>Domicile</th>
+                  <th>Extérieur</th>
+                  <th>Score</th>
+                  <th>Statut</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="matchesTableBody">
+                <tr>
+                  <td
+                    colspan="6"
+                    style="text-align: center; color: var(--text-dim)"
+                  >
+                    Chargement…
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-      <button onclick="createTeam()" class="btn-primary">Ajouter l'équipe</button>
-    </div>
+      <!-- /tab-matches -->
 
-    <!-- Liste des équipes -->
-    <div class="card">
-      <div class="card-header">
-        <span class="card-icon">🏅</span>
-        <h2>Équipes enregistrées</h2>
+      <!-- ═══════════════════════════════════════
+       ONGLET 2 — ÉQUIPES
+       ═══════════════════════════════════════ -->
+      <div id="tab-teams" class="tab-section">
+        <!-- Créer une équipe -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-icon">➕</span>
+            <h2>Ajouter une équipe</h2>
+          </div>
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label>Nom de l'équipe *</label>
+              <input
+                type="text"
+                id="teamName"
+                placeholder="Ex: Château d'Eau"
+              />
+            </div>
+            <div class="form-group">
+              <label>Numéro de téléphone</label>
+              <input type="tel" id="teamPhone" placeholder="77 00 00 00" />
+            </div>
+            <div class="form-group">
+              <label>Couleur de l'équipe</label>
+              <div style="display: flex; align-items: center; gap: 10px">
+                <input
+                  type="color"
+                  id="teamColor"
+                  value="#009EDB"
+                  style="
+                    width: 50px;
+                    height: 38px;
+                    padding: 2px;
+                    cursor: pointer;
+                  "
+                />
+                <span style="font-size: 12px; color: var(--text-dim)">
+                  La couleur du texte s'ajuste automatiquement
+                </span>
+              </div>
+            </div>
+          </div>
+          <button onclick="createTeam()" class="btn-primary">
+            Ajouter l'équipe
+          </button>
+        </div>
+
+        <!-- Liste des équipes -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-icon">🏅</span>
+            <h2>Équipes enregistrées</h2>
+          </div>
+
+          <!-- Initialisation rapide : les 10 équipes réelles en un clic -->
+          <div class="info-box" style="margin-bottom: 16px">
+            <strong>Initialisation rapide</strong> — Cliquez pour ajouter les 10
+            équipes du tournoi d'un seul coup.
+            <br />
+            <button
+              onclick="initDefaultTeams()"
+              class="btn-outline"
+              style="margin-top: 10px"
+            >
+              Charger les 10 équipes officielles
+            </button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Équipe</th>
+                  <th>Téléphone</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="teamsTableBody">
+                <tr>
+                  <td
+                    colspan="3"
+                    style="text-align: center; color: var(--text-dim)"
+                  >
+                    Chargement…
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
+      <!-- /tab-teams -->
 
-      <!-- Initialisation rapide : les 10 équipes réelles en un clic -->
-      <div class="info-box" style="margin-bottom:16px">
-        <strong>Initialisation rapide</strong> — Cliquez pour ajouter les 10 équipes du tournoi d'un seul coup.
-        <br/>
-        <button onclick="initDefaultTeams()" class="btn-outline" style="margin-top:10px">
-          Charger les 10 équipes officielles
-        </button>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Équipe</th><th>Téléphone</th><th>Action</th></tr>
-          </thead>
-          <tbody id="teamsTableBody">
-            <tr><td colspan="3" style="text-align:center;color:var(--text-dim)">Chargement…</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </div><!-- /tab-teams -->
-
-  <!-- ═══════════════════════════════════════
+      <!-- ═══════════════════════════════════════
        ONGLET 3 — SPONSORS
        ═══════════════════════════════════════ -->
-  <div id="tab-sponsors" class="tab-section">
+      <div id="tab-sponsors" class="tab-section">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-icon">➕</span>
+            <h2>Ajouter un sponsor / partenaire</h2>
+          </div>
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label>Nom complet *</label>
+              <input
+                type="text"
+                id="sponsorName"
+                placeholder="Ex: Telecom Djibouti"
+              />
+            </div>
+            <div class="form-group">
+              <label>Abréviation (4 lettres max)</label>
+              <input
+                type="text"
+                id="sponsorShort"
+                maxlength="4"
+                placeholder="TD"
+              />
+            </div>
+            <div class="form-group">
+              <label>Type</label>
+              <input
+                type="text"
+                id="sponsorType"
+                placeholder="Sponsor principal / Partenaire…"
+              />
+            </div>
+            <div class="form-group">
+              <label>Fond du logo</label>
+              <input
+                type="color"
+                id="sponsorBg"
+                value="#009EDB"
+                style="width: 50px; height: 38px; padding: 2px; cursor: pointer"
+              />
+            </div>
+            <div class="form-group">
+              <label>Couleur du texte logo</label>
+              <input
+                type="color"
+                id="sponsorColor"
+                value="#ffffff"
+                style="width: 50px; height: 38px; padding: 2px; cursor: pointer"
+              />
+            </div>
+            <div class="form-group">
+              <label>Ordre d'affichage</label>
+              <input type="number" id="sponsorOrder" min="1" placeholder="1" />
+            </div>
+          </div>
+          <button onclick="createSponsor()" class="btn-primary">
+            Ajouter le sponsor
+          </button>
+        </div>
 
-    <div class="card">
-      <div class="card-header">
-        <span class="card-icon">➕</span>
-        <h2>Ajouter un sponsor / partenaire</h2>
+        <div class="card">
+          <div class="card-header">
+            <span class="card-icon">🤝</span>
+            <h2>Sponsors enregistrés</h2>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Type</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="sponsorsTableBody">
+                <tr>
+                  <td
+                    colspan="3"
+                    style="text-align: center; color: var(--text-dim)"
+                  >
+                    Chargement…
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-      <div class="form-grid">
-        <div class="form-group full-width">
-          <label>Nom complet *</label>
-          <input type="text" id="sponsorName" placeholder="Ex: Telecom Djibouti"/>
-        </div>
-        <div class="form-group">
-          <label>Abréviation (4 lettres max)</label>
-          <input type="text" id="sponsorShort" maxlength="4" placeholder="TD"/>
-        </div>
-        <div class="form-group">
-          <label>Type</label>
-          <input type="text" id="sponsorType" placeholder="Sponsor principal / Partenaire…"/>
-        </div>
-        <div class="form-group">
-          <label>Fond du logo</label>
-          <input type="color" id="sponsorBg" value="#009EDB"
-                 style="width:50px;height:38px;padding:2px;cursor:pointer"/>
-        </div>
-        <div class="form-group">
-          <label>Couleur du texte logo</label>
-          <input type="color" id="sponsorColor" value="#ffffff"
-                 style="width:50px;height:38px;padding:2px;cursor:pointer"/>
-        </div>
-        <div class="form-group">
-          <label>Ordre d'affichage</label>
-          <input type="number" id="sponsorOrder" min="1" placeholder="1"/>
-        </div>
-      </div>
-      <button onclick="createSponsor()" class="btn-primary">Ajouter le sponsor</button>
-    </div>
+      <!-- /tab-sponsors -->
+    </main>
 
-    <div class="card">
-      <div class="card-header">
-        <span class="card-icon">🤝</span>
-        <h2>Sponsors enregistrés</h2>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Nom</th><th>Type</th><th>Action</th></tr>
-          </thead>
-          <tbody id="sponsorsTableBody">
-            <tr><td colspan="3" style="text-align:center;color:var(--text-dim)">Chargement…</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <footer>
+      <div class="flag-bar"></div>
+      <p>Administration — Championnat Alisabieh 2026</p>
+    </footer>
 
-  </div><!-- /tab-sponsors -->
+    <script type="module" src="assets/js/admin.js"></script>
 
-</main>
+    <!-- Initialisation rapide des 10 équipes officielles -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        getDocs,
+        serverTimestamp,
+      } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
 
-<footer>
-  <div class="flag-bar"></div>
-  <p>Administration — Championnat Alisabieh 2026</p>
-</footer>
+      const firebaseConfig = {
+        apiKey: "AIzaSyCnpck3ez1b1oD9A9-cfMKMPm1I1WONXYY",
+        authDomain: "championnat-alisabieh-2026.firebaseapp.com",
+        projectId: "championnat-alisabieh-2026",
+        storageBucket: "championnat-alisabieh-2026.firebasestorage.app",
+        messagingSenderId: "971207034843",
+        appId: "1:971207034843:web:dac112b526239ff75fc9fe",
+      };
+      const db = getFirestore(initializeApp(firebaseConfig, "init-app"));
 
-<script type="module" src="assets/js/admin.js"></script>
+      /* Les 10 équipes officielles du tournoi */
+      const OFFICIAL_TEAMS = [
+        {
+          name: "Château d'Eau",
+          phone: "77042263",
+          color: "#009EDB",
+          textColor: "#fff",
+        },
+        {
+          name: "Cité",
+          phone: "77193502",
+          color: "#007A3D",
+          textColor: "#fff",
+        },
+        {
+          name: "Barwaqo",
+          phone: "77233259",
+          color: "#CE1126",
+          textColor: "#fff",
+        },
+        {
+          name: "Feraad",
+          phone: "77188941",
+          color: "#C8A96E",
+          textColor: "#0A1628",
+        },
+        {
+          name: "Main de Lion",
+          phone: "77104548",
+          color: "#1A3358",
+          textColor: "#fff",
+        },
+        {
+          name: "Il Jano",
+          phone: "77107232",
+          color: "#2ECC71",
+          textColor: "#0A1628",
+        },
+        {
+          name: "Abatoir",
+          phone: "77544084",
+          color: "#E67E22",
+          textColor: "#fff",
+        },
+        {
+          name: "Cheikh Moussa",
+          phone: "77159001",
+          color: "#8E44AD",
+          textColor: "#fff",
+        },
+        {
+          name: "Q.Ali",
+          phone: "77398743",
+          color: "#16A085",
+          textColor: "#fff",
+        },
+        {
+          name: "Al Rahma",
+          phone: "77174001",
+          color: "#C0392B",
+          textColor: "#fff",
+        },
+      ];
 
-<!-- Initialisation rapide des 10 équipes officielles -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, serverTimestamp }
-  from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCnpck3ez1b1oD9A9-cfMKMPm1I1WONXYY",
-  authDomain: "championnat-alisabieh-2026.firebaseapp.com",
-  projectId: "championnat-alisabieh-2026",
-  storageBucket: "championnat-alisabieh-2026.firebasestorage.app",
-  messagingSenderId: "971207034843",
-  appId: "1:971207034843:web:dac112b526239ff75fc9fe",
-};
-const db = getFirestore(initializeApp(firebaseConfig, "init-app"));
-
-/* Les 10 équipes officielles du tournoi */
-const OFFICIAL_TEAMS = [
-  { name: "Château d'Eau",  phone: "77042263", color: "#009EDB", textColor: "#fff"     },
-  { name: "Cité",           phone: "77193502", color: "#007A3D", textColor: "#fff"     },
-  { name: "Barwaqo",        phone: "77233259", color: "#CE1126", textColor: "#fff"     },
-  { name: "Feraad",         phone: "77188941", color: "#C8A96E", textColor: "#0A1628" },
-  { name: "Main de Lion",   phone: "77104548", color: "#1A3358", textColor: "#fff"     },
-  { name: "Il Jano",        phone: "77107232", color: "#2ECC71", textColor: "#0A1628" },
-  { name: "Abatoir",        phone: "77544084", color: "#E67E22", textColor: "#fff"     },
-  { name: "Cheikh Moussa",  phone: "77159001", color: "#8E44AD", textColor: "#fff"     },
-  { name: "Q.Ali",          phone: "77398743", color: "#16A085", textColor: "#fff"     },
-  { name: "Al Rahma",       phone: "77174001", color: "#C0392B", textColor: "#fff"     },
-];
-
-window.initDefaultTeams = async () => {
-  try {
-    // Vérifie si des équipes existent déjà
-    const snap = await getDocs(collection(db, "teams"));
-    if (!snap.empty) {
-      if (!confirm(`Il y a déjà ${snap.size} équipe(s) dans Firestore. Ajouter quand même les 10 officielles ?`))
-        return;
-    }
-    for (const t of OFFICIAL_TEAMS) {
-      await addDoc(collection(db, "teams"), { ...t, createdAt: serverTimestamp() });
-    }
-    alert("✅ Les 10 équipes ont été ajoutées avec succès !");
-  } catch (e) {
-    alert("Erreur : " + e.message);
-  }
-};
-</script>
-
-</body>
+      window.initDefaultTeams = async () => {
+        try {
+          // Vérifie si des équipes existent déjà
+          const snap = await getDocs(collection(db, "teams"));
+          if (!snap.empty) {
+            if (
+              !confirm(
+                `Il y a déjà ${snap.size} équipe(s) dans Firestore. Ajouter quand même les 10 officielles ?`,
+              )
+            )
+              return;
+          }
+          for (const t of OFFICIAL_TEAMS) {
+            await addDoc(collection(db, "teams"), {
+              ...t,
+              createdAt: serverTimestamp(),
+            });
+          }
+          alert("✅ Les 10 équipes ont été ajoutées avec succès !");
+        } catch (e) {
+          alert("Erreur : " + e.message);
+        }
+      };
+    </script>
+  </body>
 </html>
