@@ -184,7 +184,7 @@ function eventIcon(type, scored) {
   if (type === "yellow") return "🟨";
   if (type === "red") return "🟥";
   if (type === "penalty") return scored ? "⚽ pen." : "❌ pen.";
-  if (type === "forfait") return "🚫 Forfait"
+  if (type === "forfait") return "🚫 Forfait";
   return "•";
 }
 
@@ -336,6 +336,27 @@ function render() {
 
   const dateFormatted = m.day ? m.day.split("-").reverse().join("/") : "—";
 
+  // Arbitres
+  const arbitres = m.arbitres || {};
+  const arbitresHtml = arbitres.principal
+    ? `
+  <div class="arbitres-panel">
+    <div class="arbitres-title">⚖️ Officiels du match</div>
+    <div class="arbitre-row">
+      <span class="arbitre-role">Arbitre principal</span>
+      <span class="arbitre-name">${arbitres.principal}</span>
+    </div>
+    ${arbitres.assistant1
+      ? `
+    <div class="arbitre-row">
+      <span class="arbitre-role">Assistant 1</span>
+      <span class="arbitre-name">${arbitres.assistant1}</span>
+    </div>`
+      : ""
+    }
+  </div>`
+    : "";
+
   /* ── Assemblage ── */
   appEl.innerHTML = `
     <!-- ③ SCORE DU MATCH -->
@@ -373,6 +394,7 @@ function render() {
           <div class="hero-team-name">${awayName}</div>
         </div>
       </div>
+      ${arbitresHtml}
       <div class="events-list">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;
                     letter-spacing:2px;text-transform:uppercase;
