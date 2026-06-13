@@ -665,3 +665,226 @@ footer strong {
     color: var(--text-dim);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   ONGLETS PRINCIPAUX — Phase de Poules / Phase Finale
+   ═══════════════════════════════════════════════════════════ */
+.main-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+ 
+.main-tab-btn {
+  font-family: "Oswald", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 12px 24px;
+  border-radius: 6px;
+  border: 1.5px solid rgba(0, 158, 219, 0.25);
+  background: var(--dj-card);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+ 
+.main-tab-btn:hover {
+  border-color: var(--dj-blue);
+  color: var(--dj-white);
+}
+ 
+.main-tab-btn.active {
+  background: var(--dj-blue);
+  border-color: var(--dj-blue);
+  color: #fff;
+}
+ 
+.main-tab-view { display: none; }
+.main-tab-view.active { display: block; }
+ 
+/* ═══════════════════════════════════════════════════════════
+   BRACKET — PHASE FINALE
+   ═══════════════════════════════════════════════════════════ */
+.bracket-wrap {
+  display: flex;
+  gap: 50px;
+  overflow-x: auto;
+  padding: 10px 4px 30px;
+  -webkit-overflow-scrolling: touch;
+}
+ 
+.bracket-round {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+  min-width: 230px;
+  flex-shrink: 0;
+}
+ 
+.bracket-round-title {
+  font-family: "Oswald", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--dj-sand);
+  text-align: center;
+  margin-bottom: 4px;
+}
+ 
+/* Paire de slots avec connecteur en accolade vers la droite */
+.bracket-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  position: relative;
+  padding-right: 36px;
+}
+ 
+.bracket-pair::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 36px;
+  height: calc(50% + 14px);
+  transform: translateY(-100%);
+  border: 1px solid rgba(0, 158, 219, 0.3);
+  border-left: none;
+  border-radius: 0 6px 6px 0;
+}
+ 
+.bracket-pair.bracket-pair-single::after { display: none; }
+ 
+.bracket-slot { flex: 1; display: flex; align-items: center; }
+ 
+/* Carte mini-match du bracket */
+.bracket-card {
+  width: 100%;
+  background: var(--dj-card);
+  border: 1px solid rgba(0, 158, 219, 0.15);
+  border-radius: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s;
+}
+ 
+.bracket-card:hover {
+  border-color: rgba(0, 158, 219, 0.5);
+  transform: translateY(-1px);
+}
+ 
+.bracket-meta {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+ 
+.bracket-team-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 0;
+  gap: 8px;
+}
+ 
+.bracket-team-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--dj-white);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+ 
+.bracket-team-row.winner .bracket-team-name {
+  font-weight: 700;
+  color: var(--dj-blue);
+}
+ 
+.bracket-badge-sm {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Oswald", sans-serif;
+  font-size: 7px;
+  font-weight: 700;
+  flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+ 
+.bracket-score {
+  font-family: "Oswald", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+ 
+.bracket-team-row.winner .bracket-score { color: var(--dj-blue); }
+ 
+/* Carte vide (match pas encore défini) */
+.bracket-card-empty {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  border: 1.5px dashed rgba(0,158,219,0.2);
+  border-radius: 6px;
+  color: var(--text-dim);
+  font-size: 11px;
+  font-style: italic;
+  font-family: "Barlow Condensed", sans-serif;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+ 
+/* Bloc Petite Finale séparé */
+.bracket-petite-finale {
+  margin-top: 36px;
+}
+ 
+.empty-bracket {
+  color: var(--text-dim);
+  text-align: center;
+  padding: 50px 20px;
+  font-size: 14px;
+}
+ 
+/* ── Responsive bracket ── */
+@media (max-width: 700px) {
+  .bracket-wrap { gap: 30px; }
+  .bracket-round { min-width: 200px; }
+  .bracket-pair { padding-right: 26px; gap: 20px; }
+  .bracket-pair::after { width: 26px; }
+}
+ 
+@media (max-width: 500px) {
+  .main-tab-btn {
+    flex: 1;
+    text-align: center;
+    font-size: 11px;
+    padding: 10px 12px;
+    letter-spacing: 1px;
+  }
+  .bracket-round { min-width: 170px; }
+  .bracket-team-name { font-size: 11px; }
+}
+

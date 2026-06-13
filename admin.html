@@ -90,6 +90,29 @@
           </div>
           <div class="form-grid">
             <div class="form-group">
+              <label>Phase *</label>
+              <select id="matchRound" onchange="toggleBracketFields()">
+                <option value="poule">Phase de poules</option>
+                <option value="quart">Quart de finale</option>
+                <option value="demi">Demi-finale</option>
+                <option value="finale">Finale</option>
+                <option value="petite-finale">Petite finale</option>
+              </select>
+            </div>
+            <div
+              class="form-group"
+              id="bracketPositionGroup"
+              style="display: none"
+            >
+              <label>Position dans le bracket</label>
+              <select id="bracketPosition">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </div>
+            <div class="form-group">
               <label>Date *</label>
               <input type="date" id="newDay" />
             </div>

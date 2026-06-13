@@ -31,8 +31,7 @@
           <div class="header-titles">
             <h1>Coupe du <span>27 Juin</span></h1>
             <p>
-              Association APDS &nbsp;·&nbsp; Région d'Alisabieh &nbsp;·&nbsp;
-              Djibouti
+              Association APDS ASKA
             </p>
           </div>
         </div>
@@ -45,15 +44,6 @@
       </div>
     </header>
 
-    <!-- ===== BANDEAU SPONSORS DÉFILANT (CSS PUR) =====
-         COMMENT MODIFIER :
-         1. Ajoutez vos images dans assets/images/sponsors/
-         2. Dupliquez un bloc <div class="sponsor-item"> dans CHAQUE groupe
-            (groupe 1 ET groupe 2 doivent être identiques pour le loop infini)
-         3. Remplacez src="..." par le chemin de votre image
-         4. Ajustez la durée dans style.css : animation: sponsorScroll 20s
-            (plus le nombre est grand, plus c'est lent)
-    ===================================================== -->
     <div class="sponsors-bar">
       <div class="sponsors-label">Partenaires</div>
       <div class="sponsors-scroll-wrap">
@@ -236,23 +226,50 @@
 
     <!-- ===== CONTENU PRINCIPAL ===== -->
     <main class="main-content">
-      <!-- Navigation jours défilante -->
-      <div class="days-nav-wrap">
-        <div class="days-nav" id="daysNav">
+      <!-- Onglets principaux -->
+      <div class="main-tabs">
+        <button
+          class="main-tab-btn"
+          onclick="switchMainTab('poules')"
+          data-maintab="poules"
+        >
+          Phase de Poules
+        </button>
+        <button
+          class="main-tab-btn active"
+          onclick="switchMainTab('bracket')"
+          data-maintab="bracket"
+        >
+          Phase Finale
+        </button>
+      </div>
+
+      <!-- ── VUE 1 : PHASE DE POULES ── -->
+      <div id="poulesView" class="main-tab-view">
+        <!-- Navigation jours défilante -->
+        <div class="days-nav-wrap">
+          <div class="days-nav" id="daysNav">
+            <!-- Rempli par JS -->
+          </div>
+        </div>
+
+        <!-- Sections par jour -->
+        <div id="daysSections">
           <!-- Rempli par JS -->
         </div>
       </div>
 
-      <!-- Sections par jour -->
-      <div id="daysSections">
-        <!-- Rempli par JS -->
+      <!-- ── VUE 2 : PHASE FINALE (BRACKET) ── -->
+      <div id="bracketView" class="main-tab-view active">
+        <div id="bracketContent">
+          <!-- Rempli par JS -->
+        </div>
       </div>
     </main>
-
     <!-- ===== PIED DE PAGE ===== -->
     <footer>
       <div class="footer-flag"></div>
-      <p><strong>Coupe 27 Juin - APDS</strong> &nbsp;</p>
+      <p><strong>Coupe 27 Juin - APDS ASKA</strong> &nbsp;</p>
       <p>Réalisé par Hamoud Abass Daher</p>
     </footer>
     <script src="assets/js/index.js" type="module"></script>

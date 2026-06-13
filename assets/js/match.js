@@ -253,6 +253,68 @@ function renderStandingsTable(
     </div>`;
 }
 
+/* ─── PROBABILITÉ DE VICTOIRE basée sur l'historique ── */
+function computeWinProbability(homeId, awayId) {
+  // Stats globales par équipe : victoires, nuls, défaites, buts marqués/encaissés, matchs joués
+  function teamStats(teamId) {
+    let played = 0,
+      wins = 0,
+      draws = 0,
+      goalsFor = 0,
+      goalsAgainst = 0;
+    allMatches
+      .filter((m) => m.status === "done")
+      .forEach((m) => {
+        if (m.homeId === teamId) {
+          played++;
+          goalsFor += m.scoreHome;
+          goalsAgainst += m.scoreAway;
+          if (m.scoreHome > m.scoreAway) wins++;
+          else if (m.scoreHome === m.scoreAway) draws++;
+        } else if (m.awayId === teamId) {
+          played++;
+          goalsFor += m.scoreAway;
+          goalsAgainst += m.scoreHome;
+          if (m.scoreAway > m.scoreHome) wins++;
+          else if (m.scoreHome === m.scoreAway) draws++;
+        }
+      });
+    return { played, wins, draws, goalsFor, goalsAgainst };
+  }
+
+  const h = teamStats(homeId);
+  const a = teamStats(awayId);
+
+  // "Force" de chaque équipe = (points par match) + (buts marqués par match) - (buts encaissés par match)
+  function strength(s) {
+    if (s.played === 0) return 1; // neutre si aucun historique
+    const ptsPerGame = (s.wins * 3 + s.draws) / s.played;
+    const gfPerGame = s.goalsFor / s.played;
+    const gaPerGame = s.goalsAgainst / s.played;
+    return Math.max(0.1, ptsPerGame + gfPerGame - gaPerGame + 1); // +1 pour éviter 0
+  }
+
+  const sh = strength(h);
+  const sa = strength(a);
+  const total = sh + sa;
+
+  // Probabilité de victoire de chaque équipe (le nul est réparti proportionnellement)
+  let pHome = sh / total;
+  let pAway = sa / total;
+
+  // Petite marge pour le match nul (10% fixe, réparti depuis les deux probas)
+  const drawShare = 0.1;
+  pHome = pHome * (1 - drawShare);
+  pAway = pAway * (1 - drawShare);
+  const pDraw = 1 - pHome - pAway;
+
+  return {
+    home: Math.round(pHome * 100),
+    draw: Math.round(pDraw * 100),
+    away: Math.round(pAway * 100),
+  };
+}
+
 /* ─── RENDU PRINCIPAL ─────────────────────────────────────── */
 function render() {
   const appEl = document.getElementById("app");
@@ -264,6 +326,7 @@ function render() {
   }
 
   const m = currentMatch;
+  const isBracketMatch = m.round && m.round !== "poule";
   const home = teamById[m.homeId];
   const away = teamById[m.awayId];
 
@@ -359,6 +422,34 @@ function render() {
 
   /* ── Assemblage ── */
   appEl.innerHTML = `
+  ${isBracketMatch
+      ? (() => {
+        const prob = computeWinProbability(m.homeId, m.awayId);
+        return `
+    <div class="section-header" style="margin-top:32px">
+      <div class="section-line"></div>
+      <h2>Probabilité de victoire</h2>
+      <div class="section-line" style="transform:scaleX(-1)"></div>
+    </div>
+    <div class="prob-card">
+      <div class="prob-row">
+        <span class="prob-team" style="color:${homeColor}">${homeName}</span>
+        <span class="prob-value" style="color:${homeColor}">${prob.home}%</span>
+      </div>
+      <div class="prob-bar">
+        <div class="prob-bar-home" style="width:${prob.home}%;background:${homeColor}"></div>
+        <div class="prob-bar-draw" style="width:${prob.draw}%"></div>
+        <div class="prob-bar-away" style="width:${prob.away}%;background:${awayColor}"></div>
+      </div>
+      <div class="prob-row">
+        <span class="prob-team" style="color:${awayColor}">${awayName}</span>
+        <span class="prob-value" style="color:${awayColor}">${prob.away}%</span>
+      </div>
+      <div class="prob-draw-label">Match nul : ${prob.draw}%</div>
+    </div>`;
+      })()
+      : ""
+    }
     <!-- ③ SCORE DU MATCH -->
     <div class="section-header" style="margin-top:32px">
       <div class="section-line"></div>
@@ -406,25 +497,29 @@ function render() {
     </div>
 
     <!-- ① CLASSEMENTS A & B -->
-    <div class="section-header">
-      <div class="section-line"></div>
-      <h2>Classements</h2>
-      <div class="section-line" style="transform:scaleX(-1)"></div>
-    </div>
-
-    <div class="standings-grid">
-      ${renderStandingsTable(standA, m.homeId, m.awayId, "Tableau A", "#009EDB")}
-      ${renderStandingsTable(standB, m.homeId, m.awayId, "Tableau B", "#007A3D")}
-    </div>
-
-    ${standX.length
+   ${!isBracketMatch
       ? `
-    <div style="margin-top:14px">
-      ${renderStandingsTable(standX, m.homeId, m.awayId, "Autres équipes", "#C8A96E")}
-    </div>`
+<div class="section-header">
+  <div class="section-line"></div>
+  <h2>Classements</h2>
+  <div class="section-line" style="transform:scaleX(-1)"></div>
+</div>
+
+<div class="standings-grid">
+  ${renderStandingsTable(standA, m.homeId, m.awayId, "Tableau A", "#009EDB")}
+  ${renderStandingsTable(standB, m.homeId, m.awayId, "Tableau B", "#007A3D")}
+</div>
+
+${standX.length
+        ? `
+<div style="margin-top:14px">
+  ${renderStandingsTable(standX, m.homeId, m.awayId, "Autres équipes", "#C8A96E")}
+</div>`
+        : ""
+      }
+`
       : ""
     }
-
     <!-- ② STATISTIQUES -->
     <div class="section-header" style="margin-top:32px">
       <div class="section-line"></div>

@@ -554,3 +554,54 @@
   font-weight: 500;
   color: var(--dj-white);
 }
+
+.prob-card {
+  background: var(--dj-card);
+  border: 1px solid rgba(0,158,219,0.15);
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+
+.prob-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.prob-team {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.prob-value {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.prob-bar {
+  display: flex;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  margin: 8px 0;
+  background: var(--dj-mid);
+}
+
+.prob-bar-draw {
+  background: var(--text-dim);
+  opacity: 0.4;
+}
+
+.prob-draw-label {
+  text-align: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-top: 6px;
+}

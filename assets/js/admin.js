@@ -9,15 +9,21 @@ import {
   collection,
   getDocs,
   doc,
-  getDoc,
   addDoc,
   updateDoc,
   deleteDoc,
   arrayUnion,
-  arrayRemove,
   onSnapshot,
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  deleteObject,
+} from "https://www.gstatic.com/firebasejs/11.10.0/firebase-storage.js";
 
 /* ─── CONFIG ──────────────────────────────────────────────── */
 const firebaseConfig = {
@@ -32,6 +38,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+const storage = getStorage(app);
 
 /* ─── AUTH GUARD ─────────────────────────────────────────── */
 onAuthStateChanged(auth, (user) => {
@@ -53,7 +60,7 @@ function toast(msg, ok = true) {
   t.textContent = msg;
   t.style.background = ok ? "#007A3D" : "#CE1126";
   t.classList.add("show");
-  setTimeout(() => t.classList.remove("show"), 3000);
+  setTimeout(() => t.classList.remove("show"), 3500);
 }
 
 function setLoading(btnId, loading) {
@@ -114,6 +121,17 @@ function fillMatchSelects() {
   renderMatchesTable();
 }
 
+/* Libellé court de la phase pour l'admin */
+function roundLabel(round, pos) {
+  const labels = {
+    quart: "Quart " + (pos || ""),
+    demi: "Demi " + (pos || ""),
+    finale: "Finale",
+    "petite-finale": "Petite Finale",
+  };
+  return labels[round] || "";
+}
+
 function renderMatchesTable() {
   const tbody = document.getElementById("matchesTableBody");
   if (!tbody) return;
@@ -160,6 +178,7 @@ function renderMatchesTable() {
 
 /* Créer un match */
 window.createMatch = async () => {
+  const round = document.getElementById("matchRound").value;
   const day = document.getElementById("newDay").value;
   const homeId = document.getElementById("homeTeam").value;
   const awayId = document.getElementById("awayTeam").value;
@@ -175,27 +194,54 @@ window.createMatch = async () => {
     return;
   }
 
-  try {
-    await addDoc(collection(db, "matches"), {
-      day,
-      homeId,
-      awayId,
-      time,
-      field: field || "",
-      status: "upcoming",
-      scoreHome: null,
-      scoreAway: null,
-      events: [],
-      createdAt: serverTimestamp(),
-    });
-    toast("Match créé ✓");
-    ["newDay", "newTime", "field"].forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) el.value = "";
-    });
-  } catch (e) {
-    toast("Erreur : " + e.message, false);
+  const matchData = {
+    day,
+    homeId,
+    awayId,
+    time,
+    field: field || "",
+    status: "upcoming",
+    scoreHome: null,
+    scoreAway: null,
+    events: [],
+    createdAt: serverTimestamp(),
+    round,
+  };
+
+  // Phase finale : position dans le bracket
+  if (round !== "poule") {
+    matchData.bracketPosition = parseInt(
+      document.getElementById("bracketPosition").value,
+    );
   }
+
+ try {
+    await addDoc(collection(db, "matches"), matchData);
+    toast("Match créé ✓");
+    ["newDay","newTime","field"].forEach(id => { const el = document.getElementById(id); if(el) el.value=""; });
+  } catch(e) { toast("Erreur : "+e.message, false); }
+};
+
+/* ─── PHASE FINALE : afficher/masquer le sélecteur de position ── */
+window.toggleBracketFields = function() {
+  const round = document.getElementById("matchRound").value;
+  const group = document.getElementById("bracketPositionGroup");
+  const posSelect = document.getElementById("bracketPosition");
+ 
+  if (round === "poule") {
+    group.style.display = "none";
+    return;
+  }
+ 
+  group.style.display = "";
+ 
+  // Options selon la phase
+  let options = [];
+  if (round === "quart")        options = [1,2,3,4];
+  else if (round === "demi")    options = [1,2];
+  else /* finale / petite-finale */ options = [1];
+ 
+  posSelect.innerHTML = options.map(n => `<option value="${n}">${n}</option>`).join("");
 };
 
 /* Mettre à jour score + statut */
@@ -487,3 +533,4 @@ onSnapshot(collection(db, "matches"), (snap) => {
 /* Init onglet actif + table sponsors */
 showTab("tab-matches");
 renderSponsorsTable();
+toggleBracketFields();
