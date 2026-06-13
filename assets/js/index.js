@@ -123,7 +123,7 @@ function renderMatches() {
     return;
   }
 
-  const days = [...new Set(matches.map((m) => m.day))].sort();
+  const days = [...new Set(pouleMatches.map((m) => m.day))].sort();
   const defaultDay = pickDefaultDay(days);
 
   nav.innerHTML = days
@@ -138,7 +138,7 @@ function renderMatches() {
 
   sections.innerHTML = days
     .map((d) => {
-      const dayMatches = matches
+      const dayMatches = pouleMatches
         .filter((m) => m.day === d)
         .sort((a, b) => (a.time || "").localeCompare(b.time || ""));
       return `

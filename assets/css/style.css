@@ -749,13 +749,12 @@ footer strong {
   content: "";
   position: absolute;
   right: 0;
-  top: 50%;
+  top: 0;
+  bottom: 0;
   width: 36px;
-  height: calc(50% + 14px);
-  transform: translateY(-100%);
   border: 1px solid rgba(0, 158, 219, 0.3);
   border-left: none;
-  border-radius: 0 6px 6px 0;
+  border-radius: 0 8px 8px 0;
 }
  
 .bracket-pair.bracket-pair-single::after { display: none; }
