@@ -23,6 +23,47 @@ let teams = [];
 let matches = [];
 let teamById = {};
 
+/* ─── PWA : BOUTON D'INSTALLATION PERSONNALISÉ ───────────── */
+
+let deferredPrompt = null;
+const installBtn = document.getElementById("installBtn");
+
+// 1. Le navigateur signale qu'une installation est possible
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();        // empêche le mini-prompt automatique du navigateur
+  deferredPrompt = event;        // on garde l'événement pour plus tard
+  installBtn.style.display = "";  // on affiche notre bouton
+});
+
+// 2. Clic sur notre bouton → déclenche le vrai prompt natif
+installBtn.addEventListener("click", async () => {
+  if (!deferredPrompt) return;
+
+  deferredPrompt.prompt();  // affiche la fenêtre native d'installation
+
+  const { outcome } = await deferredPrompt.userChoice;
+  if (outcome === "accepted") {
+    console.log("Utilisateur a installé l'app");
+  } else {
+    console.log("Utilisateur a refusé");
+  }
+
+  // Le prompt ne peut être utilisé qu'une fois
+  deferredPrompt = null;
+  installBtn.style.display = "none";
+});
+
+// 3. Si déjà installée → cacher le bouton définitivement
+window.addEventListener("appinstalled", () => {
+  installBtn.style.display = "none";
+  deferredPrompt = null;
+});
+
+// 4. Détection si déjà lancée en mode standalone (déjà installée)
+if (window.matchMedia("(display-mode: standalone)").matches) {
+  installBtn.style.display = "none";
+}
+
 /* ─── COULEURS PAR DÉFAUT ─────────────────────────────────── */
 const DEFAULT_COLORS = [
   { color: "#009EDB", textColor: "#fff" },
@@ -407,3 +448,11 @@ onSnapshot(collection(db, "matches"), (snap) => {
   renderMatches();
   renderBracket();
 });
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js")
+      .then(reg => console.log("SW enregistré", reg.scope))
+      .catch(err => console.error("Échec SW", err));
+  });
+}

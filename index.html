@@ -14,6 +14,8 @@
       type="image/png"
       href="assets/images/APDS-removebg-preview.png"
     />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#009EDB" />
   </head>
   <body>
     <!-- ===== EN-TÊTE ===== -->
@@ -30,9 +32,7 @@
 
           <div class="header-titles">
             <h1>Coupe du <span>27 Juin</span></h1>
-            <p>
-              Association APDS ASKA
-            </p>
+            <p>Association APDS ASKA</p>
           </div>
         </div>
 
@@ -241,6 +241,14 @@
           data-maintab="bracket"
         >
           Phase Finale
+        </button>
+        <!-- NOUVEAU BOUTON — caché par défaut -->
+        <button
+          id="installBtn"
+          class="main-tab-btn install-btn"
+          style="display: none"
+        >
+          📲 Télécharger l'application
         </button>
       </div>
 
