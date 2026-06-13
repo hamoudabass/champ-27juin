@@ -933,4 +933,19 @@ footer strong {
   opacity: 0.85;
 }
 
+.weather-widget {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--dj-card);
+  border: 1px solid rgba(0, 158, 219, 0.2);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 13px;
+  color: var(--dj-white);
+}
+.weather-icon {
+  font-size: 16px;
+}
 

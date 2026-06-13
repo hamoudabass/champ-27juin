@@ -456,3 +456,34 @@ if ("serviceWorker" in navigator) {
       .catch(err => console.error("Échec SW", err));
   });
 }
+
+async function loadWeather() {
+  const widget = document.getElementById("weatherWidget");
+  try {
+    const res = await fetch(
+      "https://api.open-meteo.com/v1/forecast?latitude=11.15&longitude=42.72&current=temperature_2m,weather_code&timezone=Africa/Djibouti"
+    );
+    const data = await res.json();
+    const temp = Math.round(data.current.temperature_2m);
+    const code = data.current.weather_code;
+
+    const iconMap = {
+      0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️",
+      45: "🌫️", 48: "🌫️",
+      51: "🌦️", 61: "🌧️", 63: "🌧️", 65: "🌧️",
+      80: "🌦️", 95: "⛈️",
+    };
+    const icon = iconMap[code] || "🌡️";
+
+    widget.innerHTML = `
+      <span class="weather-icon">${icon}</span>
+      <span class="weather-temp">${temp}°C — Alisabieh</span>
+    `;
+  } catch (e) {
+    widget.innerHTML = `<span class="weather-temp">Météo indisponible</span>`;
+  }
+}
+
+loadWeather();
+// Rafraîchir toutes les 30 minutes
+setInterval(loadWeather, 30 * 60 * 1000);
