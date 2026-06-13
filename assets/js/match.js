@@ -253,9 +253,9 @@ function renderStandingsTable(
     </div>`;
 }
 
-/* ─── PROBABILITÉ DE VICTOIRE basée sur l'historique ── */
-function computeWinProbability(homeId, awayId) {
-  // Stats globales par équipe : victoires, nuls, défaites, buts marqués/encaissés, matchs joués
+/* ─── PROBABILITÉ DE VICTOIRE — historique + score en direct ── */
+function computeWinProbability(homeId, awayId, m) {
+  // 1. Force historique (comme avant)
   function teamStats(teamId) {
     let played = 0,
       wins = 0,
@@ -263,47 +263,79 @@ function computeWinProbability(homeId, awayId) {
       goalsFor = 0,
       goalsAgainst = 0;
     allMatches
-      .filter((m) => m.status === "done")
-      .forEach((m) => {
-        if (m.homeId === teamId) {
+      .filter((x) => x.status === "done")
+      .forEach((x) => {
+        if (x.homeId === teamId) {
           played++;
-          goalsFor += m.scoreHome;
-          goalsAgainst += m.scoreAway;
-          if (m.scoreHome > m.scoreAway) wins++;
-          else if (m.scoreHome === m.scoreAway) draws++;
-        } else if (m.awayId === teamId) {
+          goalsFor += x.scoreHome;
+          goalsAgainst += x.scoreAway;
+          if (x.scoreHome > x.scoreAway) wins++;
+          else if (x.scoreHome === x.scoreAway) draws++;
+        } else if (x.awayId === teamId) {
           played++;
-          goalsFor += m.scoreAway;
-          goalsAgainst += m.scoreHome;
-          if (m.scoreAway > m.scoreHome) wins++;
-          else if (m.scoreHome === m.scoreAway) draws++;
+          goalsFor += x.scoreAway;
+          goalsAgainst += x.scoreHome;
+          if (x.scoreAway > x.scoreHome) wins++;
+          else if (x.scoreHome === x.scoreAway) draws++;
         }
       });
     return { played, wins, draws, goalsFor, goalsAgainst };
   }
 
-  const h = teamStats(homeId);
-  const a = teamStats(awayId);
-
-  // "Force" de chaque équipe = (points par match) + (buts marqués par match) - (buts encaissés par match)
   function strength(s) {
-    if (s.played === 0) return 1; // neutre si aucun historique
+    if (s.played === 0) return 1;
     const ptsPerGame = (s.wins * 3 + s.draws) / s.played;
     const gfPerGame = s.goalsFor / s.played;
     const gaPerGame = s.goalsAgainst / s.played;
-    return Math.max(0.1, ptsPerGame + gfPerGame - gaPerGame + 1); // +1 pour éviter 0
+    return Math.max(0.1, ptsPerGame + gfPerGame - gaPerGame + 1);
   }
 
-  const sh = strength(h);
-  const sa = strength(a);
-  const total = sh + sa;
+  const h = teamStats(homeId);
+  const a = teamStats(awayId);
+  let sh = strength(h);
+  let sa = strength(a);
 
-  // Probabilité de victoire de chaque équipe (le nul est réparti proportionnellement)
+  // 2. AJUSTEMENT EN DIRECT selon le score actuel
+  const status = m.status || "upcoming";
+  const isLive = status === "live" || status === "half";
+
+  if (isLive && m.scoreHome !== null && m.scoreAway !== null) {
+    const diff = m.scoreHome - m.scoreAway; // positif = domicile mène
+
+    // Poids du score : plus le match avance, plus le score compte
+    // Mi-temps = poids modéré, En cours tard = poids fort
+    // On estime le "temps écoulé" via la minute du dernier événement, sinon 45min par défaut
+    const lastMinute = (m.events || []).reduce(
+      (max, e) => Math.max(max, e.minute || 0),
+      0,
+    );
+    const elapsedRatio =
+      status === "half" ? 0.5 : Math.min(1, Math.max(0.1, lastMinute / 90));
+
+    // Le score actuel devient de plus en plus déterminant avec le temps
+    const scoreWeight = 1 + diff * (3 + elapsedRatio * 6); // diff=1 but à 45' -> x4, à 90' -> x7
+
+    if (diff > 0) sh *= scoreWeight;
+    else if (diff < 0)
+      sa *= Math.abs(scoreWeight) || 1 - diff * (3 + elapsedRatio * 6);
+
+    // Recalcul propre pour diff négatif
+    if (diff < 0) {
+      sa = sa * (1 + Math.abs(diff) * (3 + elapsedRatio * 6));
+    }
+  }
+
+  const total = sh + sa;
   let pHome = sh / total;
   let pAway = sa / total;
 
-  // Petite marge pour le match nul (10% fixe, réparti depuis les deux probas)
-  const drawShare = 0.1;
+  // Le nul devient improbable en fin de match si quelqu'un mène
+  let drawShare = 0.1;
+  if (isLive && m.scoreHome !== null) {
+    const diff = Math.abs(m.scoreHome - m.scoreAway);
+    if (diff > 0) drawShare = Math.max(0.02, 0.1 - diff * 0.03);
+  }
+
   pHome = pHome * (1 - drawShare);
   pAway = pAway * (1 - drawShare);
   const pDraw = 1 - pHome - pAway;
@@ -424,11 +456,16 @@ function render() {
   appEl.innerHTML = `
   ${isBracketMatch
       ? (() => {
-        const prob = computeWinProbability(m.homeId, m.awayId);
+        const prob = computeWinProbability(m.homeId, m.awayId, m);
         return `
     <div class="section-header" style="margin-top:32px">
       <div class="section-line"></div>
-      <h2>Probabilité de victoire</h2>
+      <h2>${m.status === "live" || m.status === "half"
+            ? "Probabilité de victoire (en direct)"
+            : m.status === "done"
+              ? "Probabilité de victoire (avant match)"
+              : "Probabilité de victoire"
+          }</h2>
       <div class="section-line" style="transform:scaleX(-1)"></div>
     </div>
     <div class="prob-card">
