@@ -1,4 +1,4 @@
-const CACHE_NAME = "alisabieh-static-v1";
+const CACHE_NAME = "alisabieh-static-v2";
 const STATIC_ASSETS = [
   "/", "/index.html", "/match.html",
   "/assets/css/style.css",
