@@ -244,6 +244,41 @@
               <input type="text" id="eventPlayer" placeholder="Prénom Nom" />
             </div>
           </div>
+          <div class="card">
+            <div class="card-header">
+              <span class="card-icon">🎯</span>
+              <h2>Séance de tirs au but</h2>
+            </div>
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label>Match *</label>
+                <select id="penaltyMatch">
+                  <option value="">— Choisir un match —</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Score T.A.B. domicile</label>
+                <input
+                  type="number"
+                  id="penaltyScoreHome"
+                  min="0"
+                  placeholder="0"
+                />
+              </div>
+              <div class="form-group">
+                <label>Score T.A.B. extérieur</label>
+                <input
+                  type="number"
+                  id="penaltyScoreAway"
+                  min="0"
+                  placeholder="0"
+                />
+              </div>
+            </div>
+            <button onclick="savePenaltyShootout()" class="btn-primary">
+              Enregistrer le score T.A.B.
+            </button>
+          </div>
 
           <button onclick="addEvent()" class="btn-primary">
             Ajouter l'événement

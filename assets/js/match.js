@@ -400,14 +400,28 @@ function render() {
   }
 
   /* ── Score + événements ── */
-  const scoreHtml =
-    m.scoreHome !== null && m.scoreHome !== undefined
-      ? `<div class="hero-score-nums">
+  const shoot = m.penaltyShootout;
+  const hasShootout = shoot && shoot.active;
+
+  const scoreHtml = m.scoreHome !== null && m.scoreHome !== undefined
+    ? `<div class="hero-score-nums">
+       <span style="color:${homeColor}">${m.scoreHome}</span>
+       <span class="hero-score-sep">—</span>
+       <span style="color:${awayColor}">${m.scoreAway}</span>
+     </div>
+     ${hasShootout ? `
+       <div class="shootout-score">
+         🎯 Tirs au but : ${shoot.scoreHome} - ${shoot.scoreAway}
+       </div>` : ""}`
+    : `<div style="font-family:'Oswald',sans-serif;font-size:36px;color:var(--text-dim);letter-spacing:4px">VS</div>`;
+
+  m.scoreHome !== null && m.scoreHome !== undefined
+    ? `<div class="hero-score-nums">
          <span style="color:${homeColor}">${m.scoreHome}</span>
          <span class="hero-score-sep">—</span>
          <span style="color:${awayColor}">${m.scoreAway}</span>
        </div>`
-      : `<div style="font-family:'Oswald',sans-serif;font-size:36px;
+    : `<div style="font-family:'Oswald',sans-serif;font-size:36px;
                    color:var(--text-dim);letter-spacing:4px">VS</div>`;
 
   const events = [...(m.events || [])].sort((a, b) => a.minute - b.minute);

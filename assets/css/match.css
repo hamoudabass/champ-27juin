@@ -605,3 +605,13 @@
   color: var(--text-dim);
   margin-top: 6px;
 }
+
+.shootout-score {
+  margin-top: 8px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--dj-sand);
+  text-align: center;
+}

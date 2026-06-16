@@ -121,6 +121,44 @@ function fillMatchSelects() {
   renderMatchesTable();
 }
 
+/* ─── SÉANCE DE TIRS AU BUT ──────────────────────────────── */
+function fillPenaltySelects() {
+  const sel = document.getElementById("penaltyMatch");
+  if (!sel) return;
+  const cur = sel.value;
+  sel.innerHTML = `<option value="">— Choisir un match —</option>`;
+  matches.forEach((m) => {
+    const home = teams.find((t) => t.id === m.homeId)?.name || m.homeId;
+    const away = teams.find((t) => t.id === m.awayId)?.name || m.awayId;
+    sel.innerHTML += `<option value="${m.id}">${m.day || "?"} — ${home} vs ${away}</option>`;
+  });
+  sel.value = cur;
+}
+
+window.savePenaltyShootout = async () => {
+  const matchId = document.getElementById("penaltyMatch").value;
+  const scoreHome = document.getElementById("penaltyScoreHome").value;
+  const scoreAway = document.getElementById("penaltyScoreAway").value;
+
+  if (!matchId || scoreHome === "" || scoreAway === "") {
+    toast("Remplissez tous les champs", false);
+    return;
+  }
+
+  try {
+    await updateDoc(doc(db, "matches", matchId), {
+      penaltyShootout: {
+        active: true,
+        scoreHome: parseInt(scoreHome),
+        scoreAway: parseInt(scoreAway),
+      },
+    });
+    toast("Score T.A.B. enregistré ✓");
+  } catch (e) {
+    toast("Erreur : " + e.message, false);
+  }
+};
+
 /* Libellé court de la phase pour l'admin */
 function roundLabel(round, pos) {
   const labels = {
@@ -215,11 +253,16 @@ window.createMatch = async () => {
     );
   }
 
- try {
+  try {
     await addDoc(collection(db, "matches"), matchData);
     toast("Match créé ✓");
-    ["newDay","newTime","field"].forEach(id => { const el = document.getElementById(id); if(el) el.value=""; });
-  } catch(e) { toast("Erreur : "+e.message, false); }
+    ["newDay", "newTime", "field"].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) el.value = "";
+    });
+  } catch (e) {
+    toast("Erreur : " + e.message, false);
+  }
 };
 
 /* ─── PHASE FINALE : afficher/masquer le sélecteur de position ── */
@@ -227,21 +270,23 @@ window.toggleBracketFields = function() {
   const round = document.getElementById("matchRound").value;
   const group = document.getElementById("bracketPositionGroup");
   const posSelect = document.getElementById("bracketPosition");
- 
+
   if (round === "poule") {
     group.style.display = "none";
     return;
   }
- 
+
   group.style.display = "";
- 
+
   // Options selon la phase
   let options = [];
-  if (round === "quart")        options = [1,2,3,4];
-  else if (round === "demi")    options = [1,2];
+  if (round === "quart") options = [1, 2, 3, 4];
+  else if (round === "demi") options = [1, 2];
   else /* finale / petite-finale */ options = [1];
- 
-  posSelect.innerHTML = options.map(n => `<option value="${n}">${n}</option>`).join("");
+
+  posSelect.innerHTML = options
+    .map((n) => `<option value="${n}">${n}</option>`)
+    .join("");
 };
 
 /* Mettre à jour score + statut */
@@ -528,6 +573,7 @@ onSnapshot(collection(db, "matches"), (snap) => {
   matches = [];
   snap.forEach((d) => matches.push({ id: d.id, ...d.data() }));
   fillMatchSelects();
+  fillPenaltySelects();
 });
 
 /* Init onglet actif + table sponsors */
