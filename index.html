@@ -255,6 +255,14 @@
         >
           📲 Télécharger l'application
         </button>
+
+        <button
+          class="main-tab-btn"
+          onclick="switchMainTab('votes')"
+          data-maintab="votes"
+        >
+          🗳️ Votes
+        </button>
       </div>
 
       <!-- ── VUE 1 : PHASE DE POULES ── -->
@@ -278,6 +286,42 @@
           <!-- Rempli par JS -->
         </div>
       </div>
+
+      <!-- ── VUE 3 : VOTES ── -->
+      <div id="votesView" class="main-tab-view">
+        <!-- SECTION 1 : PRONOSTIC DU PROCHAIN MATCH -->
+        <div class="vote-section">
+          <div class="vote-section-header">
+            <span class="vote-section-icon">⚽</span>
+            <h2>Pronostic du prochain match</h2>
+          </div>
+          <div id="pronosticContent">
+            <!-- Rempli par JS -->
+          </div>
+        </div>
+
+        <!-- SECTION 2 : MEILLEURE ÉQUIPE -->
+        <div class="vote-section">
+          <div class="vote-section-header">
+            <span class="vote-section-icon">🏆</span>
+            <h2>Meilleure équipe du tournoi</h2>
+          </div>
+          <div id="bestTeamContent">
+            <!-- Rempli par JS -->
+          </div>
+        </div>
+
+        <!-- SECTION 3 : MVP DU TOURNOI -->
+        <div class="vote-section">
+          <div class="vote-section-header">
+            <span class="vote-section-icon">⭐</span>
+            <h2>Meilleur Joueur du tournoi</h2>
+          </div>
+          <div id="mvpContent">
+            <!-- Rempli par JS -->
+          </div>
+        </div>
+      </div>
     </main>
     <!-- ===== PIED DE PAGE ===== -->
     <footer>
@@ -286,5 +330,6 @@
       <p>Réalisé par Hamoud Abass Daher</p>
     </footer>
     <script src="assets/js/index.js" type="module"></script>
+    <script type="module" src="assets/js/votes.js"></script>
   </body>
 </html>

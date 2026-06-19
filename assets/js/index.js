@@ -30,16 +30,16 @@ const installBtn = document.getElementById("installBtn");
 
 // 1. Le navigateur signale qu'une installation est possible
 window.addEventListener("beforeinstallprompt", (event) => {
-  event.preventDefault();        // empêche le mini-prompt automatique du navigateur
-  deferredPrompt = event;        // on garde l'événement pour plus tard
-  installBtn.style.display = "";  // on affiche notre bouton
+  event.preventDefault(); // empêche le mini-prompt automatique du navigateur
+  deferredPrompt = event; // on garde l'événement pour plus tard
+  installBtn.style.display = ""; // on affiche notre bouton
 });
 
 // 2. Clic sur notre bouton → déclenche le vrai prompt natif
 installBtn.addEventListener("click", async () => {
   if (!deferredPrompt) return;
 
-  deferredPrompt.prompt();  // affiche la fenêtre native d'installation
+  deferredPrompt.prompt(); // affiche la fenêtre native d'installation
 
   const { outcome } = await deferredPrompt.userChoice;
   if (outcome === "accepted") {
@@ -213,22 +213,22 @@ function renderMatches() {
 function renderBracket() {
   const el = document.getElementById("bracketContent");
   if (!el) return;
- 
+
   if (!teams.length) {
     el.innerHTML = `<p class="empty-bracket">Chargement…</p>`;
     return;
   }
- 
-  const quarts  = matches.filter(m => m.round === "quart");
-  const demis   = matches.filter(m => m.round === "demi");
-  const finale  = matches.filter(m => m.round === "finale");
-  const petite  = matches.filter(m => m.round === "petite-finale");
- 
+
+  const quarts = matches.filter((m) => m.round === "quart");
+  const demis = matches.filter((m) => m.round === "demi");
+  const finale = matches.filter((m) => m.round === "finale");
+  const petite = matches.filter((m) => m.round === "petite-finale");
+
   if (!quarts.length && !demis.length && !finale.length && !petite.length) {
     el.innerHTML = `<p class="empty-bracket">La phase finale n'a pas encore été configurée.</p>`;
     return;
   }
- 
+
   /* Quarts groupés par paires (1-2, 3-4) qui mènent aux demis */
   const quartPairs = [
     [getByPos(quarts, 1), getByPos(quarts, 2)],
@@ -237,19 +237,23 @@ function renderBracket() {
   const demiPair = [getByPos(demis, 1), getByPos(demis, 2)];
   const finaleMatch = getByPos(finale, 1);
   const petiteMatch = getByPos(petite, 1);
- 
+
   el.innerHTML = `
     <div class="bracket-wrap">
  
       <!-- QUARTS -->
       <div class="bracket-round">
         <div class="bracket-round-title">Quarts de Finale</div>
-        ${quartPairs.map(pair => `
+        ${quartPairs
+      .map(
+        (pair) => `
           <div class="bracket-pair">
             <div class="bracket-slot">${renderBracketCard(pair[0])}</div>
             <div class="bracket-slot">${renderBracketCard(pair[1])}</div>
           </div>
-        `).join("")}
+        `,
+      )
+      .join("")}
       </div>
  
       <!-- DEMIS -->
@@ -268,51 +272,54 @@ function renderBracket() {
           <div class="bracket-slot">${renderBracketCard(finaleMatch)}</div>
         </div>
  
-        ${petite.length || true ? `
+        ${petite.length || true
+      ? `
         <div class="bracket-petite-finale">
           <div class="bracket-round-title">Petite Finale</div>
           <div class="bracket-pair bracket-pair-single">
             <div class="bracket-slot">${renderBracketCard(petiteMatch)}</div>
           </div>
-        </div>` : ""}
+        </div>`
+      : ""
+    }
       </div>
  
     </div>`;
 }
- 
+
 /* Trouve un match par sa position dans le bracket */
 function getByPos(list, pos) {
-  return list.find(m => Number(m.bracketPosition) === pos) || null;
+  return list.find((m) => Number(m.bracketPosition) === pos) || null;
 }
- 
+
 /* Carte mini-match du bracket (ou carte vide si pas encore défini) */
 function renderBracketCard(m) {
   if (!m) {
     return `<div class="bracket-card-empty">À déterminer</div>`;
   }
-  
+
   const home = teamById[m.homeId];
   const away = teamById[m.awayId];
-  const homeName = home ? home.name : (m.homeId || "?");
-  const awayName = away ? away.name : (m.awayId || "?");
-  const homeColor = home ? (home.color || "#009EDB") : "#009EDB";
-  const awayColor = away ? (away.color || "#007A3D") : "#007A3D";
-  const homeTxt   = home ? (home.textColor || "#fff") : "#fff";
-  const awayTxt   = away ? (away.textColor || "#fff") : "#fff";
- 
+  const homeName = home ? home.name : m.homeId || "?";
+  const awayName = away ? away.name : m.awayId || "?";
+  const homeColor = home ? home.color || "#009EDB" : "#009EDB";
+  const awayColor = away ? away.color || "#007A3D" : "#007A3D";
+  const homeTxt = home ? home.textColor || "#fff" : "#fff";
+  const awayTxt = away ? away.textColor || "#fff" : "#fff";
+
   const hasScore = m.scoreHome !== null && m.scoreHome !== undefined;
-  const homeWin  = hasScore && m.scoreHome > m.scoreAway;
-  const awayWin  = hasScore && m.scoreAway > m.scoreHome;
- 
+  const homeWin = hasScore && m.scoreHome > m.scoreAway;
+  const awayWin = hasScore && m.scoreAway > m.scoreHome;
+
   const scoreH = hasScore ? m.scoreHome : "-";
   const scoreA = hasScore ? m.scoreAway : "-";
- 
+
   const dateLabel = m.day ? m.day.split("-").slice(1).reverse().join("/") : "";
- 
+
   return `
     <div class="bracket-card" onclick="openMatchDetail('${m.id}')">
       <div class="bracket-meta">
-        <span>${dateLabel}${m.time ? " · "+m.time : ""}</span>
+        <span>${dateLabel}${m.time ? " · " + m.time : ""}</span>
         ${statusBadge(m.status || "upcoming")}
       </div>
       <div class="bracket-team-row ${homeWin ? "winner" : ""}">
@@ -335,8 +342,6 @@ function renderBracketCard(m) {
       </div>
     </div>`;
 }
-
-
 
 /* ─── CARTE MATCH ─────────────────────────────────────────── */
 function renderMatchCard(m) {
@@ -387,15 +392,23 @@ function renderMatchCard(m) {
     </div>`;
 }
 
-/* ─── SWITCH ONGLET PRINCIPAL (Poules / Bracket) ─────────── */
+/* ─── SWITCH ONGLET PRINCIPAL (Poules / Bracket / Votes) ─────────── */
 window.switchMainTab = function(tab) {
-  document.querySelectorAll(".main-tab-btn").forEach(b =>
-    b.classList.toggle("active", b.dataset.maintab === tab)
-  );
-  document.getElementById("poulesView").classList.toggle("active", tab === "poules");
-  document.getElementById("bracketView").classList.toggle("active", tab === "bracket");
- 
+  document
+    .querySelectorAll(".main-tab-btn")
+    .forEach((b) => b.classList.toggle("active", b.dataset.maintab === tab));
+  document
+    .getElementById("poulesView")
+    .classList.toggle("active", tab === "poules");
+  document
+    .getElementById("bracketView")
+    .classList.toggle("active", tab === "bracket");
+  document
+    .getElementById("votesView")
+    .classList.toggle("active", tab === "votes"); // AJOUTER
+
   if (tab === "bracket") renderBracket();
+  if (tab === "votes") renderVotes(); // AJOUTER
 };
 
 /* ─── SWITCH JOUR ─────────────────────────────────────────── */
@@ -436,6 +449,8 @@ onSnapshot(collection(db, "teams"), (snap) => {
     teamById[team.id] = team;
   });
   renderMatches();
+  window._teams = teams;
+  window._teamById = teamById;
 });
 
 onSnapshot(collection(db, "matches"), (snap) => {
@@ -447,13 +462,15 @@ onSnapshot(collection(db, "matches"), (snap) => {
   });
   renderMatches();
   renderBracket();
+  window._matches = matches;
 });
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js")
-      .then(reg => console.log("SW enregistré", reg.scope))
-      .catch(err => console.error("Échec SW", err));
+    navigator.serviceWorker
+      .register("/sw.js")
+      .then((reg) => console.log("SW enregistré", reg.scope))
+      .catch((err) => console.error("Échec SW", err));
   });
 }
 
@@ -461,17 +478,25 @@ async function loadWeather() {
   const widget = document.getElementById("weatherWidget");
   try {
     const res = await fetch(
-      "https://api.open-meteo.com/v1/forecast?latitude=11.15&longitude=42.72&current=temperature_2m,weather_code&timezone=Africa/Djibouti"
+      "https://api.open-meteo.com/v1/forecast?latitude=11.15&longitude=42.72&current=temperature_2m,weather_code&timezone=Africa/Djibouti",
     );
     const data = await res.json();
     const temp = Math.round(data.current.temperature_2m);
     const code = data.current.weather_code;
 
     const iconMap = {
-      0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️",
-      45: "🌫️", 48: "🌫️",
-      51: "🌦️", 61: "🌧️", 63: "🌧️", 65: "🌧️",
-      80: "🌦️", 95: "⛈️",
+      0: "☀️",
+      1: "🌤️",
+      2: "⛅",
+      3: "☁️",
+      45: "🌫️",
+      48: "🌫️",
+      51: "🌦️",
+      61: "🌧️",
+      63: "🌧️",
+      65: "🌧️",
+      80: "🌦️",
+      95: "⛈️",
     };
     const icon = iconMap[code] || "🌡️";
 
@@ -487,3 +512,7 @@ async function loadWeather() {
 loadWeather();
 // Rafraîchir toutes les 30 minutes
 setInterval(loadWeather, 30 * 60 * 1000);
+
+function renderVotes() {
+  if (typeof window._renderVotes === "function") window._renderVotes();
+}

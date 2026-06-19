@@ -949,3 +949,324 @@ footer strong {
   font-size: 16px;
 }
 
+/* ═══════════════════════════════════════════════════════════
+   ONGLET VOTES
+   ═══════════════════════════════════════════════════════════ */
+
+/* Section */
+.vote-section {
+  background: var(--dj-card);
+  border: 1px solid rgba(0,158,219,0.15);
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin-bottom: 20px;
+}
+
+.vote-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(0,158,219,0.1);
+}
+
+.vote-section-icon { font-size: 20px; }
+
+.vote-section-header h2 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 16px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase;
+  color: var(--dj-sand);
+}
+
+/* Messages */
+.vote-empty, .vote-hint {
+  color: var(--text-dim);
+  font-size: 13px;
+  text-align: center;
+  padding: 12px 0;
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.vote-locked {
+  text-align: center;
+  color: var(--dj-red);
+  font-size: 12px;
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 8px 0;
+}
+
+.vote-my-choice {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: 6px 0 12px;
+}
+
+.vote-total {
+  text-align: right;
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.5px;
+  margin-top: 8px;
+}
+
+/* ── Section 1 : Pronostic ── */
+.pronostic-card { }
+
+.pronostic-teams {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 10px;
+}
+
+.pronostic-team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.pronostic-badge {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px; font-weight: 700;
+  border: 2px solid rgba(255,255,255,0.1);
+}
+
+.pronostic-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; font-weight: 600;
+  text-align: center; color: var(--dj-white);
+}
+
+.pronostic-vs {
+  font-family: 'Oswald', sans-serif;
+  font-size: 18px; font-weight: 700;
+  color: var(--text-dim);
+}
+
+/* Boutons de vote */
+.vote-btns {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.vote-btn {
+  flex: 1;
+  min-width: 100px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1.5px solid;
+  background: transparent;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.vote-btn:hover { opacity: 0.75; }
+
+.vote-btn-draw {
+  border-color: var(--text-dim);
+  color: var(--text-dim);
+}
+
+/* Barres de résultat */
+.vote-results { margin-top: 10px; }
+
+.vote-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.vote-bar-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px; color: var(--text-dim);
+  min-width: 110px; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
+}
+
+.vote-bar-track {
+  flex: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.vote-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.vote-bar-pct {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px; font-weight: 600;
+  color: var(--dj-white);
+  min-width: 36px; text-align: right;
+}
+
+.vote-bar-count {
+  font-size: 11px; color: var(--text-dim);
+  min-width: 28px;
+}
+
+/* ── Section 2 : Meilleure équipe ── */
+.team-vote-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.team-vote-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 10px;
+  background: var(--dj-mid);
+  border: 1.5px solid rgba(0,158,219,0.15);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.team-vote-card:hover:not(:disabled) {
+  border-color: var(--dj-blue);
+  transform: translateY(-2px);
+}
+
+.team-vote-card.team-voted {
+  border-color: var(--dj-blue);
+  background: rgba(0,158,219,0.12);
+}
+
+.team-vote-card.vote-disabled { cursor: default; }
+
+.team-vote-badge {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px; font-weight: 700;
+  border: 2px solid rgba(255,255,255,0.1);
+}
+
+.team-vote-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px; font-weight: 600;
+  text-align: center; color: var(--dj-white);
+}
+
+.voted-check {
+  font-size: 10px; color: var(--dj-blue);
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+/* ── Section 3 : MVP ── */
+.mvp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mvp-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--dj-mid);
+  border: 1.5px solid rgba(0,158,219,0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mvp-row:hover:not(.vote-disabled) {
+  border-color: var(--dj-blue);
+  transform: translateX(2px);
+}
+
+.mvp-row.mvp-voted {
+  border-color: var(--dj-blue);
+  background: rgba(0,158,219,0.1);
+}
+
+.mvp-row.vote-disabled { cursor: default; }
+
+.mvp-badge {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px; font-weight: 700;
+  flex-shrink: 0;
+}
+
+.mvp-info {
+  flex: 1;
+  display: flex; flex-direction: column; gap: 2px;
+}
+
+.mvp-name {
+  font-size: 13px; font-weight: 600;
+  color: var(--dj-white);
+}
+
+.mvp-team {
+  font-size: 11px; color: var(--text-dim);
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.mvp-pct-bar {
+  width: 80px; height: 6px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 3px; overflow: hidden;
+}
+
+.mvp-pct-fill {
+  height: 100%; border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.mvp-pct-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px; font-weight: 600;
+  color: var(--dj-white); min-width: 36px;
+  text-align: right;
+}
+
+.mvp-vote-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--dj-blue);
+}
+
+/* ── Responsive ── */
+@media (max-width: 500px) {
+  .vote-btns { flex-direction: column; }
+  .vote-btn  { min-width: unset; }
+  .team-vote-grid { grid-template-columns: repeat(2, 1fr); }
+  .mvp-pct-bar { width: 50px; }
+  .vote-bar-label { min-width: 80px; font-size: 11px; }
+}
