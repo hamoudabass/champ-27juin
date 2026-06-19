@@ -31,6 +31,13 @@ const db = getFirestore(app);
 let allTeams = [];
 let allMatches = [];
 let teamById = {};
+const REFEREES = [
+  { id: "salgado", name: "Abdillahi", alias: "Salgado" },
+  { id: "dilao", name: "Moud Houssein", alias: "Dilao" },
+  { id: "robinoh", name: "Sadam", alias: "Robinoh" },
+  { id: "mahdi", name: "Mahdi Mahamoud", alias: null },
+  { id: "waberi", name: "Waberi Aden", alias: null },
+];
 
 /* ─── INITIALES ───────────────────────────────────────────── */
 function initials(name = "") {
@@ -62,18 +69,21 @@ function getNextMatch() {
   const bracketRounds = ["quart", "demi", "finale", "petite-finale"];
 
   // D'abord chercher un match en cours (live ou mi-temps) dans la phase finale
-  const live = allMatches.find(m =>
-    (m.status === "live" || m.status === "half") &&
-    bracketRounds.includes(m.round)
+  const live = allMatches.find(
+    (m) =>
+      (m.status === "live" || m.status === "half") &&
+      bracketRounds.includes(m.round),
   );
   if (live) return live;
 
   // Sinon le prochain match "upcoming" de la phase finale avec date définie
   const upcomingBracket = allMatches
-    .filter(m =>
-      m.status === "upcoming" &&
-      m.day && m.day !== "A_DEFINIR" &&
-      bracketRounds.includes(m.round)
+    .filter(
+      (m) =>
+        m.status === "upcoming" &&
+        m.day &&
+        m.day !== "A_DEFINIR" &&
+        bracketRounds.includes(m.round),
     )
     .sort((a, b) => (a.day + a.time).localeCompare(b.day + b.time));
 
@@ -81,7 +91,7 @@ function getNextMatch() {
 
   // Fallback : n'importe quel prochain match upcoming (poules ou autre)
   const upcoming = allMatches
-    .filter(m => m.status === "upcoming" && m.day && m.day !== "A_DEFINIR")
+    .filter((m) => m.status === "upcoming" && m.day && m.day !== "A_DEFINIR")
     .sort((a, b) => (a.day + a.time).localeCompare(b.day + b.time));
 
   return upcoming[0] || null;
@@ -168,9 +178,14 @@ async function renderPronostic() {
       ${isLive ? `<p class="vote-locked">🔒 Vote fermé — match en cours</p>` : ""}
 
       ${alreadyVoted
-      ? `<p class="vote-my-choice">
-        Votre vote : <strong>${myVote === "home" ? homeName : myVote === "away" ? awayName : "Match nul"}</strong>
-      </p>`
+      ? `
+  <p class="vote-my-choice">
+    Votre vote : <strong>${myVote === "home" ? homeName : myVote === "away" ? awayName : "Match nul"}</strong>
+  </p>
+  <button class="cancel-vote-btn"
+          onclick="cancelVote('pronostic_${m.id}', 'pronostics_${m.id}', '${myVote}').then(() => renderPronostic())">
+    ✕ Annuler mon vote
+  </button>`
       : ""
     }
 
@@ -180,8 +195,27 @@ async function renderPronostic() {
         ${renderVoteBar(awayName, data.away, pAway, awayColor)}
         <p class="vote-total">${total} vote${total > 1 ? "s" : ""} au total</p>
       </div>
+
     </div>`;
 }
+
+window.cancelVote = async (voteKey, firestoreDocId, field) => {
+  if (!hasVoted(voteKey)) return;
+
+  const choice = getVote(voteKey);
+  if (!choice) return;
+
+  try {
+    const voteRef = doc(db, "votes", firestoreDocId);
+    const snap = await getDoc(voteRef);
+    if (snap.exists() && (snap.data()[field || choice] || 0) > 0) {
+      await updateDoc(voteRef, { [field || choice]: increment(-1) });
+    }
+    localStorage.removeItem("voted_" + voteKey);
+  } catch (e) {
+    console.error("Erreur annulation :", e);
+  }
+};
 
 window.votePronostic = async (matchId, choice) => {
   const voteKey = "pronostic_" + matchId;
@@ -256,6 +290,14 @@ async function renderBestTeam() {
       : `
     <p class="vote-hint">Cliquez sur une équipe pour voter</p>`
     }
+${alreadyVoted
+      ? `
+  <button class="cancel-vote-btn"
+          onclick="cancelVote('bestTeam', 'bestTeam', '${myVote}').then(() => renderBestTeam())">
+    ✕ Annuler mon vote
+  </button>`
+      : ""
+    }
   `;
 }
 
@@ -292,9 +334,7 @@ function getMVPCandidates() {
         map[k].goals++;
       });
   });
-  return Object.values(map)
-    .sort((a, b) => b.goals - a.goals)
-    .slice(0, 8);
+  return Object.values(map).sort((a, b) => b.goals - a.goals);
 }
 
 async function renderMVP() {
@@ -355,6 +395,15 @@ async function renderMVP() {
       ? `<p class="vote-total" style="margin-top:12px">${total} vote${total > 1 ? "s" : ""} au total</p>`
       : `<p class="vote-hint">Votez pour le meilleur joueur du tournoi</p>`
     }
+
+    ${alreadyVoted
+      ? `
+  <button class="cancel-vote-btn"
+          onclick="cancelVote('mvp', 'mvp', '${myVote}').then(() => renderMVP())">
+    ✕ Annuler mon vote
+  </button>`
+      : ""
+    }
   `;
 }
 
@@ -372,6 +421,95 @@ window.voteMVP = async (key) => {
 
   saveVote("mvp", key);
   renderMVP();
+};
+
+/* ═══════════════════════════════════════════════════════════
+   SECTION 4 — MEILLEUR ARBITRE
+   ═══════════════════════════════════════════════════════════ */
+
+async function renderBestRef() {
+  const el = document.getElementById("bestRefContent");
+  if (!el) return;
+
+  const voteRef = doc(db, "votes", "bestRef");
+  const voteSnap = await getDoc(voteRef);
+  const data = voteSnap.exists() ? voteSnap.data() : {};
+
+  const total = Object.values(data).reduce((s, v) => s + v, 0);
+  const alreadyVoted = hasVoted("bestRef");
+  const myVote = getVote("bestRef");
+
+  function pct(id) {
+    return total > 0 ? Math.round(((data[id] || 0) / total) * 100) : 0;
+  }
+
+  const sorted = [...REFEREES].sort(
+    (a, b) => (data[b.id] || 0) - (data[a.id] || 0),
+  );
+
+  el.innerHTML = `
+    <div class="mvp-list">
+      ${(alreadyVoted ? sorted : REFEREES)
+      .map((r) => {
+        const voted = alreadyVoted && myVote === r.id;
+        return `
+          <div class="mvp-row ${voted ? "mvp-voted" : ""} ${alreadyVoted ? "vote-disabled" : ""}"
+               onclick="${alreadyVoted ? "" : `voteBestRef('${r.id}')`}">
+            <div class="ref-badge">⚖️</div>
+            <div class="mvp-info">
+              <span class="mvp-name">
+                ${r.name}
+                ${r.alias ? `<span class="ref-alias">(alias ${r.alias})</span>` : ""}
+              </span>
+            </div>
+            ${alreadyVoted
+            ? `<div class="mvp-pct-bar">
+                   <div class="mvp-pct-fill"
+                        style="width:${pct(r.id)}%;background:var(--dj-blue)">
+                   </div>
+                 </div>
+                 <span class="mvp-pct-label">${pct(r.id)}%</span>`
+            : `<span class="mvp-vote-label">${voted ? "✓ Mon vote" : "Voter"}</span>`
+          }
+          </div>`;
+      })
+      .join("")}
+    </div>
+    ${alreadyVoted
+      ? `<p class="vote-total" style="margin-top:12px">
+           ${total} vote${total > 1 ? "s" : ""} au total
+         </p>`
+      : `<p class="vote-hint">Votez pour le meilleur arbitre du tournoi</p>`
+    }
+
+    ${alreadyVoted
+      ? `
+  <button class="cancel-vote-btn"
+          onclick="cancelVote('bestRef', 'bestRef', '${myVote}').then(() => renderBestRef())">
+    ✕ Annuler mon vote
+  </button>`
+      : ""
+    }
+  `;
+}
+
+window.voteBestRef = async (refId) => {
+  if (hasVoted("bestRef")) return;
+
+  const voteRef = doc(db, "votes", "bestRef");
+  const snap = await getDoc(voteRef);
+
+  if (!snap.exists()) {
+    const init = {};
+    REFEREES.forEach((r) => (init[r.id] = 0));
+    init[refId] = 1;
+    await setDoc(voteRef, init);
+  } else {
+    await updateDoc(voteRef, { [refId]: increment(1) });
+  }
+
+  saveVote("bestRef", refId);
+  renderBestRef();
 };
 
 /* ═══════════════════════════════════════════════════════════
@@ -398,6 +536,7 @@ window._renderVotes = async function() {
   await renderPronostic();
   await renderBestTeam();
   await renderMVP();
+  await renderBestRef();
 };
 
 // Écoute les données partagées depuis index.js via les variables globales

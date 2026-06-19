@@ -1270,3 +1270,65 @@ footer strong {
   .mvp-pct-bar { width: 50px; }
   .vote-bar-label { min-width: 80px; font-size: 11px; }
 }
+
+.mvp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 500px;       /* hauteur max */
+  overflow-y: auto;        /* scroll vertical */
+  scrollbar-width: thin;   /* Firefox */
+  scrollbar-color: rgba(0,158,219,0.3) transparent;
+}
+
+/* Chrome/Safari */
+.mvp-list::-webkit-scrollbar {
+  width: 4px;
+}
+.mvp-list::-webkit-scrollbar-thumb {
+  background: rgba(0,158,219,0.3);
+  border-radius: 2px;
+}
+
+/* ── Arbitre ── */
+.ref-badge {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--dj-mid);
+  border: 1.5px solid rgba(0,158,219,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.ref-alias {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  color: var(--dj-sand);
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  margin-left: 4px;
+}
+
+.cancel-vote-btn {
+  display: block;
+  margin: 8px auto 0;
+  background: transparent;
+  border: 1px solid rgba(206,17,38,0.3);
+  border-radius: 4px;
+  color: rgba(206,17,38,0.7);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancel-vote-btn:hover {
+  background: rgba(206,17,38,0.1);
+  border-color: var(--dj-red);
+  color: var(--dj-red);
+}
