@@ -32,9 +32,9 @@ let allTeams = [];
 let allMatches = [];
 let teamById = {};
 const REFEREES = [
-  { id: "salgado", name: "Abdillahi", alias: "Salgado" },
+  { id: "salgado", name: "Abdirahman Isman", alias: "Salgado" },
   { id: "dilao", name: "Moud Houssein", alias: "Dilao" },
-  { id: "robinoh", name: "Sadam", alias: "Robinoh" },
+  { id: "robinoh", name: "Sadam", alias: "Robinho" },
   { id: "mahdi", name: "Mahdi Mahamoud", alias: null },
   { id: "waberi", name: "Waberi Aden", alias: null },
 ];
